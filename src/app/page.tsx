@@ -292,18 +292,18 @@ export default function HomePage() {
             <div className="text-white">
               <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
                 <SparklesIcon className="h-5 w-5 mr-2" />
-                <span className="text-sm font-medium">India's #1 Local Services Platform</span>
+                <span className="text-sm font-medium">India's #1 Mithila Shilpi Platform</span>
               </div>
               
               <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-                Get Any Service
+                Find Your Perfect
                 <span className="block bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                  At Your Doorstep
+                  Mithila Shilpi
                 </span>
             </h1>
               
               <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-                From electricians to wedding planners, find trusted professionals for all your home and business needs. Book in 60 seconds, get service in 60 minutes.
+                Connect with verified craftsmen and service providers in your area. From electricians to wedding planners, find trusted professionals for all your home and business needs.
               </p>
 
               {/* Trust Badges */}

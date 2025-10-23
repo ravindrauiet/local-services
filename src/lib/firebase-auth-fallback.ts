@@ -124,7 +124,7 @@ export class FirebaseAuthFallbackService {
     try {
       const defaultAdmin = {
         id: 'admin1',
-        email: 'admin@localservices.com',
+        email: 'admin@mithilashilpi.com',
         password: 'admin123', // In production, hash this
         name: 'System Administrator',
         role: 'super-admin',

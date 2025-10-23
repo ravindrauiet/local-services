@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   MapPinIcon, 
   PhoneIcon, 
@@ -24,13 +25,19 @@ export default function Footer() {
           {/* Company Info */}
           <div className="lg:col-span-1">
             <div className="flex items-center mb-6">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mr-3">
-                <HeartIcon className="h-6 w-6 text-white" />
+              <div className="w-10 h-10 rounded-xl overflow-hidden mr-3">
+                <Image
+                  src="/logo.png"
+                  alt="Mithila Shilpi Logo"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <h3 className="text-2xl font-bold">LocalServices</h3>
+              <h3 className="text-2xl font-bold">Mithila Shilpi</h3>
             </div>
             <p className="text-gray-300 mb-6 leading-relaxed">
-              Connecting you with the best local service providers. Quality services, 
+              Connecting you with the best craftsmen and service providers. Quality services, 
               transparent pricing, and trusted professionals in your area.
             </p>
             
@@ -149,8 +156,8 @@ export default function Footer() {
               
               <div className="flex items-center">
                 <EnvelopeIcon className="h-5 w-5 text-purple-400 mr-3 flex-shrink-0" />
-                <a href="mailto:info@localservices.com" className="text-gray-300 hover:text-white transition-colors">
-                  info@localservices.com
+                <a href="mailto:info@mithilashilpi.com" className="text-gray-300 hover:text-white transition-colors">
+                  info@mithilashilpi.com
                 </a>
               </div>
             </div>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favicon Generator for Mithila Shilpi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .step {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .logo-preview {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .logo-preview img {
+            max-width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Mithila Shilpi Favicon Generator</h1>
+        
+        <div class="logo-preview">
+            <h3>Your Current Logo:</h3>
+            <img src="/logo.png" alt="Mithila Shilpi Logo" onerror="this.style.display='none'">
+        </div>
+
+        <div class="step">
+            <h3>Step 1: Online Favicon Generator (Recommended)</h3>
+            <p>Use an online favicon generator to create all required sizes:</p>
+            <div class="code">
+                1. Go to: <a href="https://favicon.io/favicon-converter/" target="_blank">https://favicon.io/favicon-converter/</a><br>
+                2. Upload your logo.png file<br>
+                3. Download the generated favicon package<br>
+                4. Extract files to your /public folder
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>Step 2: Required Files</h3>
+            <p>You need to create these files in your <code>/public</code> folder:</p>
+            <div class="code">
+                /public/favicon.ico (16x16, 32x32, 48x48)<br>
+                /public/favicon-16x16.png (16x16 pixels)<br>
+                /public/favicon-32x32.png (32x32 pixels)<br>
+                /public/apple-touch-icon.png (180x180 pixels)
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>Step 3: Alternative - Manual Creation</h3>
+            <p>If you prefer to create them manually:</p>
+            <div class="code">
+                1. Open logo.png in any image editor<br>
+                2. Resize to 16x16, save as favicon-16x16.png<br>
+                3. Resize to 32x32, save as favicon-32x32.png<br>
+                4. Resize to 180x180, save as apple-touch-icon.png<br>
+                5. Use online converter to create favicon.ico from 32x32 version
+            </div>
+        </div>
+
+        <div class="note">
+            <strong>💡 Tip:</strong> Make sure your logo is recognizable at 16x16 pixels. You might need to simplify it for very small sizes.
+        </div>
+
+        <div class="step">
+            <h3>Step 4: Test Your Favicon</h3>
+            <p>After adding the files:</p>
+            <div class="code">
+                1. Restart your development server (npm run dev)<br>
+                2. Check the browser tab for your favicon<br>
+                3. Test on different devices and browsers
+            </div>
+        </div>
+
+        <div class="note">
+            <strong>✅ Done!</strong> Your favicon configuration is already set up in the layout.tsx file. Just add the favicon files to the /public folder and restart your server.
+        </div>
+    </div>
+</body>
+</html>

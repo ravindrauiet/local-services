@@ -171,10 +171,10 @@ export default function AdminLoginPage() {
 
             <div className="mt-4 space-y-2">
               <div className="text-xs text-gray-500">
-                <strong>Super Admin:</strong> admin@localservices.com / admin123
+                <strong>Super Admin:</strong> admin@mithilashilpi.com / admin123
               </div>
               <div className="text-xs text-gray-500">
-                <strong>Moderator:</strong> moderator@localservices.com / mod123
+                <strong>Moderator:</strong> moderator@mithilashilpi.com / mod123
               </div>
             </div>
           </div>
