@@ -4,224 +4,163 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Footer from '@/components/Footer';
 import { 
-  StarIcon, 
   MapPinIcon, 
-  PhoneIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
-  SparklesIcon,
-  ClockIcon,
-  ShieldCheckIcon,
-  CheckCircleIcon,
-  ArrowRightIcon,
   BoltIcon,
   WrenchScrewdriverIcon,
   HeartIcon,
   ScissorsIcon,
   CogIcon,
-  UserGroupIcon,
-  CurrencyDollarIcon
+  SparklesIcon,
+  StarIcon,
+  ClockIcon,
+  ShieldCheckIcon,
+  ArrowRightIcon,
+  CheckCircleIcon,
+  CurrencyDollarIcon,
+  UserGroupIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
-// Enhanced mock data with more details
-const mockProviders = [
+// Service categories with detailed information
+const serviceCategories = [
   {
-    id: '1',
-    name: 'Rajesh Kumar',
-    businessName: 'Rajesh Electrical Services',
-    serviceType: 'Electrician',
-    address: 'Sector 15, Noida',
-    phone: '+91 98765 43210',
-    rating: 4.8,
-    totalReviews: 127,
-    description: 'Professional electrician with 10+ years of experience. Specializes in home wiring, repairs, and installations.',
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-    isApproved: true,
-    price: '₹299/hour',
-    responseTime: '30 mins',
-    verified: true,
-    experience: '10+ years',
-    services: ['Home Wiring', 'Repairs', 'Installations', 'Emergency Service']
+    id: 'electrician',
+    name: 'Electrician',
+    icon: BoltIcon,
+    color: 'from-yellow-500 to-orange-500',
+    description: 'Electrical repairs, installations, and maintenance services',
+    services: ['Home Wiring', 'Switch Installation', 'Fan & Light Setup', 'MCB Repair', 'Emergency Services'],
+    avgPrice: '₹500 - ₹2,000',
+    avgTime: '2-4 hours',
+    popularity: 'High',
+    providers: 45,
+    rating: 4.8
   },
   {
-    id: '2',
-    name: 'Amit Sharma',
-    businessName: 'Sharma Plumbing Works',
-    serviceType: 'Plumber',
-    address: 'Sector 18, Noida',
-    phone: '+91 98765 43211',
-    rating: 4.6,
-    totalReviews: 89,
-    description: 'Expert plumber offering 24/7 emergency services. All types of plumbing repairs and installations.',
-    photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-    isApproved: true,
-    price: '₹249/hour',
-    responseTime: '45 mins',
-    verified: true,
-    experience: '8+ years',
-    services: ['Pipe Repair', 'Installation', 'Emergency', 'Maintenance']
+    id: 'plumber',
+    name: 'Plumber',
+    icon: WrenchScrewdriverIcon,
+    color: 'from-blue-500 to-cyan-500',
+    description: 'Plumbing repairs, installations, and maintenance',
+    services: ['Pipe Repair', 'Tap Installation', 'Bathroom Fitting', 'Water Tank Cleaning', 'Emergency Repairs'],
+    avgPrice: '₹300 - ₹1,500',
+    avgTime: '1-3 hours',
+    popularity: 'High',
+    providers: 38,
+    rating: 4.7
   },
   {
-    id: '3',
-    name: 'Priya Singh',
-    businessName: 'Priya Wedding Services',
-    serviceType: 'Wedding Services',
-    address: 'Sector 22, Noida',
-    phone: '+91 98765 43212',
-    rating: 4.9,
-    totalReviews: 156,
-    description: 'Complete wedding services including pandit booking, samagri, decorations, and event management.',
-    photo: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-    isApproved: true,
-    price: '₹15,000/event',
-    responseTime: '2 hours',
-    verified: true,
-    experience: '12+ years',
-    services: ['Pandit Booking', 'Samagri', 'Decoration', 'Event Management']
+    id: 'wedding-services',
+    name: 'Wedding Services',
+    icon: HeartIcon,
+    color: 'from-pink-500 to-rose-500',
+    description: 'Complete wedding planning and arrangements',
+    services: ['Pandit Booking', 'Samagri Supply', 'Decorations', 'Event Management', 'Photography'],
+    avgPrice: '₹15,000 - ₹50,000',
+    avgTime: '1-2 days',
+    popularity: 'Medium',
+    providers: 25,
+    rating: 4.9
   },
   {
-    id: '4',
-    name: 'Vikram Tailor',
-    businessName: 'Vikram Tailoring House',
-    serviceType: 'Cloth Shop & Tailor',
-    address: 'Sector 12, Noida',
-    phone: '+91 98765 43213',
-    rating: 4.7,
-    totalReviews: 203,
-    description: 'Professional tailoring services for men and women. Custom suits, alterations, and ready-made clothing.',
-    photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face',
-    isApproved: true,
-    price: '₹500/garment',
-    responseTime: '1 hour',
-    verified: true,
-    experience: '15+ years',
-    services: ['Custom Suits', 'Alterations', 'Ready Made', 'Design Consultation']
+    id: 'tailor',
+    name: 'Cloth Shop & Tailor',
+    icon: ScissorsIcon,
+    color: 'from-purple-500 to-indigo-500',
+    description: 'Custom tailoring and ready-made clothing',
+    services: ['Custom Suits', 'Alterations', 'Ready-made Clothes', 'Designer Wear', 'Wedding Outfits'],
+    avgPrice: '₹200 - ₹5,000',
+    avgTime: '3-7 days',
+    popularity: 'Medium',
+    providers: 32,
+    rating: 4.6
   },
   {
-    id: '5',
-    name: 'Rohit AC Services',
-    businessName: 'Cool Air Solutions',
-    serviceType: 'RO & AC Services',
-    address: 'Sector 25, Noida',
-    phone: '+91 98765 43214',
-    rating: 4.5,
-    totalReviews: 78,
-    description: 'AC repair, maintenance, and installation services. Also provides RO water purifier services.',
-    photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face',
-    isApproved: true,
-    price: '₹399/service',
-    responseTime: '1 hour',
-    verified: true,
-    experience: '6+ years',
-    services: ['AC Repair', 'Maintenance', 'Installation', 'RO Service']
+    id: 'ro-ac',
+    name: 'RO & AC Services',
+    icon: CogIcon,
+    color: 'from-teal-500 to-emerald-500',
+    description: 'AC repair, RO maintenance, and installations',
+    services: ['AC Repair', 'RO Service', 'Installation', 'Maintenance', 'Gas Filling'],
+    avgPrice: '₹800 - ₹3,000',
+    avgTime: '2-4 hours',
+    popularity: 'High',
+    providers: 28,
+    rating: 4.5
   },
   {
-    id: '6',
-    name: 'Beauty Palace',
-    businessName: 'Beauty Palace Salon',
-    serviceType: 'Beauty & Wellness',
-    address: 'Sector 16, Noida',
-    phone: '+91 98765 43215',
-    rating: 4.8,
-    totalReviews: 134,
-    description: 'Full-service beauty salon offering haircuts, styling, facials, and other beauty treatments.',
-    photo: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=100&h=100&fit=crop&crop=face',
-    isApproved: true,
-    price: '₹800/session',
-    responseTime: '30 mins',
-    verified: true,
-    experience: '5+ years',
-    services: ['Haircut', 'Styling', 'Facial', 'Beauty Treatment']
+    id: 'beauty',
+    name: 'Beauty & Wellness',
+    icon: SparklesIcon,
+    color: 'from-rose-500 to-pink-500',
+    description: 'Hair styling, facials, and beauty treatments',
+    services: ['Hair Cut & Style', 'Facial Treatment', 'Manicure & Pedicure', 'Bridal Makeup', 'Spa Services'],
+    avgPrice: '₹500 - ₹2,500',
+    avgTime: '1-3 hours',
+    popularity: 'High',
+    providers: 42,
+    rating: 4.8
   }
 ];
 
-const serviceTypes = [
-  { name: 'All Services', icon: SparklesIcon, count: 6 },
-  { name: 'Electrician', icon: BoltIcon, count: 1 },
-  { name: 'Plumber', icon: WrenchScrewdriverIcon, count: 1 },
-  { name: 'Wedding Services', icon: HeartIcon, count: 1 },
-  { name: 'Cloth Shop & Tailor', icon: ScissorsIcon, count: 1 },
-  { name: 'RO & AC Services', icon: CogIcon, count: 1 },
-  { name: 'Beauty & Wellness', icon: SparklesIcon, count: 1 }
-];
-
-const sortOptions = [
-  { value: 'rating', label: 'Highest Rated' },
-  { value: 'reviews', label: 'Most Reviews' },
-  { value: 'price_low', label: 'Price: Low to High' },
-  { value: 'price_high', label: 'Price: High to Low' },
-  { value: 'name', label: 'Name A-Z' }
+// Popular services in your area
+const popularServices = [
+  {
+    id: 1,
+    name: 'Emergency Electrician',
+    category: 'Electrician',
+    description: '24/7 emergency electrical services',
+    price: '₹800 - ₹1,500',
+    rating: 4.9,
+    reviews: 127,
+    distance: '0.5 km',
+    available: true
+  },
+  {
+    id: 2,
+    name: 'AC Repair & Service',
+    category: 'RO & AC Services',
+    description: 'Professional AC repair and maintenance',
+    price: '₹1,200 - ₹2,500',
+    rating: 4.7,
+    reviews: 89,
+    distance: '1.2 km',
+    available: true
+  },
+  {
+    id: 3,
+    name: 'Wedding Pandit Booking',
+    category: 'Wedding Services',
+    description: 'Traditional wedding ceremonies and rituals',
+    price: '₹3,000 - ₹8,000',
+    rating: 4.9,
+    reviews: 156,
+    distance: '2.1 km',
+    available: true
+  }
 ];
 
 export default function ServicesPage() {
-  const [providers, setProviders] = useState(mockProviders);
-  const [filteredProviders, setFilteredProviders] = useState(mockProviders);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedServiceType, setSelectedServiceType] = useState('All Services');
-  const [sortBy, setSortBy] = useState('rating');
-  const [showFilters, setShowFilters] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [userLocation, setUserLocation] = useState('Noida, UP');
 
-  useEffect(() => {
-    let filtered = providers;
+  const filteredCategories = serviceCategories.filter(category => {
+    if (selectedCategory === 'all') return true;
+    if (selectedCategory === 'popular') return category.popularity === 'High';
+    return category.id === selectedCategory;
+  });
 
-    // Filter by service type
-    if (selectedServiceType !== 'All Services') {
-      filtered = filtered.filter(provider => provider.serviceType === selectedServiceType);
-    }
-
-    // Filter by search term
-    if (searchTerm) {
-      filtered = filtered.filter(provider => 
-        provider.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        provider.businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        provider.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        provider.services.some(service => service.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-    }
-
-    // Sort providers
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'rating':
-          return b.rating - a.rating;
-        case 'reviews':
-          return b.totalReviews - a.totalReviews;
-        case 'price_low':
-          return parseInt(a.price.replace(/[^\d]/g, '')) - parseInt(b.price.replace(/[^\d]/g, ''));
-        case 'price_high':
-          return parseInt(b.price.replace(/[^\d]/g, '')) - parseInt(a.price.replace(/[^\d]/g, ''));
-        case 'name':
-          return a.name.localeCompare(b.name);
-        default:
-          return 0;
-      }
-    });
-
-    setFilteredProviders(filtered);
-  }, [providers, searchTerm, selectedServiceType, sortBy]);
-
-  const renderStars = (rating: number) => {
-    return (
-      <div className="flex items-center">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <span key={star}>
-            {star <= Math.floor(rating) ? (
-              <StarIconSolid className="h-4 w-4 text-yellow-400" />
-            ) : (
-              <StarIcon className="h-4 w-4 text-gray-300" />
-            )}
-          </span>
-        ))}
-        <span className="ml-1 text-sm text-gray-600">({rating})</span>
-      </div>
-    );
-  };
+  const filteredServices = popularServices.filter(service => 
+    service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    service.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-full opacity-30">
@@ -233,68 +172,51 @@ export default function ServicesPage() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center text-white">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
-              <SparklesIcon className="h-5 w-5 mr-2" />
-              <span className="text-sm font-medium">Verified Professionals</span>
-            </div>
-            
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-              Find Your Perfect
-              <span className="block bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                Service Provider
-              </span>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              Find <span className="text-yellow-300">Services</span> Near You
             </h1>
-            
-            <p className="text-xl text-blue-100 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Browse through our verified service providers and book the one that best fits your needs. All professionals are background verified and skilled.
+            <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
+              Discover and book trusted local services in your area. 
+              From home repairs to special events, we connect you with verified professionals.
             </p>
-
-            {/* Search Bar */}
-            <div className="bg-white rounded-2xl p-2 shadow-2xl max-w-4xl mx-auto">
-              <div className="flex flex-col sm:flex-row gap-2">
-                <div className="flex-1 relative">
-                  <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Search by name, business, or service..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
-                  />
-                </div>
-                <div className="sm:w-64 relative">
-                  <FunnelIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <select
-                    value={selectedServiceType}
-                    onChange={(e) => setSelectedServiceType(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 text-gray-900 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg appearance-none bg-white"
-                  >
-                    {serviceTypes.map((type) => (
-                      <option key={type.name} value={type.name}>
-                        {type.name} ({type.count})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                  Search
-                </button>
+            
+            {/* Location & Search */}
+            <div className="max-w-2xl mx-auto mb-8">
+              <div className="flex items-center justify-center mb-4">
+                <MapPinIcon className="h-6 w-6 text-yellow-300 mr-2" />
+                <span className="text-lg text-blue-100">Services available in</span>
+                <span className="text-lg font-semibold text-white ml-2">{userLocation}</span>
+              </div>
+              
+              <div className="relative">
+                <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search for services (e.g., electrician, plumber, wedding services)..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-4 rounded-xl text-lg border-0 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                />
               </div>
             </div>
 
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center justify-center gap-8 mt-8">
-              <div className="flex items-center text-blue-100">
-                <ShieldCheckIcon className="h-5 w-5 mr-2" />
-                <span className="text-sm font-medium">100% Verified</span>
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-white mb-2">6+</div>
+                <div className="text-sm text-blue-200">Service Categories</div>
               </div>
-              <div className="flex items-center text-blue-100">
-                <ClockIcon className="h-5 w-5 mr-2" />
-                <span className="text-sm font-medium">Quick Response</span>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-white mb-2">200+</div>
+                <div className="text-sm text-blue-200">Verified Providers</div>
               </div>
-              <div className="flex items-center text-blue-100">
-                <StarIcon className="h-5 w-5 mr-2" />
-                <span className="text-sm font-medium">4.7★ Average Rating</span>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-white mb-2">4.8★</div>
+                <div className="text-sm text-blue-200">Average Rating</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-white mb-2">24/7</div>
+                <div className="text-sm text-blue-200">Available</div>
               </div>
             </div>
           </div>
@@ -302,209 +224,259 @@ export default function ServicesPage() {
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Filters and Sort */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-            <div className="flex flex-wrap items-center gap-4">
-              <span className="text-gray-600 font-medium">Sort by:</span>
-              {sortOptions.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => setSortBy(option.value)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                    sortBy === option.value
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <span className="text-gray-600">
-                Showing {filteredProviders.length} provider{filteredProviders.length !== 1 ? 's' : ''}
-                {selectedServiceType !== 'All Services' && ` for ${selectedServiceType}`}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Service Type Quick Filters */}
+        {/* Category Filter */}
         <div className="mb-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Filters</h3>
-          <div className="flex flex-wrap gap-3">
-            {serviceTypes.map((type) => {
-              const Icon = type.icon;
-              return (
-                <button
-                  key={type.name}
-                  onClick={() => setSelectedServiceType(type.name)}
-                  className={`flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
-                    selectedServiceType === type.name
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                      : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-                  }`}
-                >
-                  <Icon className="h-5 w-5 mr-2" />
-                  {type.name}
-                  <span className="ml-2 bg-white/20 px-2 py-1 rounded-full text-xs">
-                    {type.count}
-                  </span>
-                </button>
-              );
-            })}
+          <div className="flex flex-wrap gap-2 justify-center">
+            <button
+              onClick={() => setSelectedCategory('all')}
+              className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
+                selectedCategory === 'all'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 shadow-md'
+              }`}
+            >
+              All Services
+            </button>
+            <button
+              onClick={() => setSelectedCategory('popular')}
+              className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
+                selectedCategory === 'popular'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 shadow-md'
+              }`}
+            >
+              Popular
+            </button>
+            {serviceCategories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
+                  selectedCategory === category.id
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 shadow-md'
+                }`}
+              >
+                {category.name}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Providers Grid */}
-        {filteredProviders.length > 0 ? (
+        {/* Service Categories */}
+        <div className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Browse Service Categories
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Choose from our comprehensive range of local services. 
+              All providers are verified and rated by real customers.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProviders.map((provider) => (
-              <div key={provider.id} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 overflow-hidden">
-                {/* Provider Header */}
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center">
-                      <img
-                        src={provider.photo}
-                        alt={provider.name}
-                        className="w-16 h-16 rounded-full object-cover mr-4 border-4 border-white shadow-lg"
-                      />
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-1">
-                          {provider.name}
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-2">
-                          {provider.businessName}
-                        </p>
-                        <div className="flex items-center gap-2">
-                          <span className="bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                            {provider.serviceType}
-                          </span>
-                          {provider.verified && (
-                            <div className="flex items-center text-green-600">
-                              <ShieldCheckIcon className="h-4 w-4 mr-1" />
-                              <span className="text-xs font-medium">Verified</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+            {filteredCategories.map((category) => {
+              const Icon = category.icon;
+              return (
+                <div
+                  key={category.id}
+                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 group cursor-pointer"
+                >
+                  <div className={`bg-gradient-to-r ${category.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon className="h-8 w-8 text-white" />
                   </div>
-
-                  {/* Rating and Reviews */}
-                  <div className="mb-4">
-                    {renderStars(provider.rating)}
-                    <p className="text-sm text-gray-500 mt-1">
-                      {provider.totalReviews} reviews • {provider.experience} experience
-                    </p>
-                  </div>
-
-                  {/* Price and Response Time */}
+                  
                   <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center text-green-600">
-                      <CurrencyDollarIcon className="h-5 w-5 mr-1" />
-                      <span className="font-bold text-lg">{provider.price}</span>
-                    </div>
-                    <div className="flex items-center text-blue-600">
-                      <ClockIcon className="h-5 w-5 mr-1" />
-                      <span className="text-sm font-medium">{provider.responseTime}</span>
-                    </div>
+                    <h3 className="text-xl font-bold text-gray-900">{category.name}</h3>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      category.popularity === 'High' 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {category.popularity} Demand
+                    </span>
                   </div>
-
-                  {/* Description */}
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {provider.description}
+                  
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    {category.description}
                   </p>
 
-                  {/* Services */}
-                  <div className="mb-4">
+                  {/* Service List */}
+                  <div className="mb-6">
+                    <h4 className="text-sm font-semibold text-gray-900 mb-3">Popular Services:</h4>
                     <div className="flex flex-wrap gap-2">
-                      {provider.services.slice(0, 3).map((service, index) => (
+                      {category.services.slice(0, 3).map((service, index) => (
                         <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs">
                           {service}
                         </span>
                       ))}
-                      {provider.services.length > 3 && (
+                      {category.services.length > 3 && (
                         <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs">
-                          +{provider.services.length - 3} more
+                          +{category.services.length - 3} more
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Location */}
-                  <div className="flex items-center text-sm text-gray-500 mb-6">
-                    <MapPinIcon className="h-4 w-4 mr-2" />
-                    {provider.address}
+                  {/* Stats */}
+                  <div className="grid grid-cols-3 gap-4 mb-6">
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-gray-900">{category.providers}</div>
+                      <div className="text-xs text-gray-600">Providers</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-gray-900">{category.rating}★</div>
+                      <div className="text-xs text-gray-600">Rating</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-gray-900">{category.avgTime}</div>
+                      <div className="text-xs text-gray-600">Avg Time</div>
+                    </div>
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex gap-3">
+                  {/* Price & CTA */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-sm text-gray-600">Starting from</div>
+                      <div className="font-bold text-lg text-gray-900">{category.avgPrice}</div>
+                    </div>
                     <Link
-                      href={`/providers/${provider.id}`}
-                      className="flex-1 bg-gray-100 text-gray-700 text-center py-3 px-4 rounded-xl hover:bg-gray-200 transition-colors font-medium"
+                      href={`/services/${category.id}`}
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg flex items-center"
                     >
-                      View Details
-                    </Link>
-                    <Link
-                      href={`/book?provider=${provider.id}`}
-                      className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center py-3 px-4 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg"
-                    >
-                      Book Now
+                      Browse
+                      <ArrowRightIcon className="h-4 w-4 ml-2" />
                     </Link>
                   </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Popular Services in Your Area */}
+        <div className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Popular Services in <span className="text-blue-600">{userLocation}</span>
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              These are the most booked services in your area right now
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredServices.map((service) => (
+              <div key={service.id} className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">{service.name}</h3>
+                    <p className="text-sm text-blue-600 font-medium">{service.category}</p>
+                  </div>
+                  <div className="flex items-center">
+                    <StarIconSolid className="h-4 w-4 text-yellow-400 mr-1" />
+                    <span className="text-sm font-semibold text-gray-900">{service.rating}</span>
+                  </div>
+                </div>
+                
+                <p className="text-gray-600 text-sm mb-4">{service.description}</p>
+                
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center text-sm text-gray-500">
+                    <MapPinIcon className="h-4 w-4 mr-1" />
+                    {service.distance}
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <UserGroupIcon className="h-4 w-4 mr-1" />
+                    {service.reviews} reviews
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm text-gray-600">Starting from</div>
+                    <div className="font-bold text-lg text-gray-900">{service.price}</div>
+                  </div>
+                  <Link
+                    href={`/book?service=${service.id}`}
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-2 rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg"
+                  >
+                    Book Now
+                  </Link>
                 </div>
               </div>
             ))}
           </div>
-        ) : (
-          <div className="text-center py-16">
-            <div className="bg-white rounded-2xl p-12 shadow-lg">
-              <div className="text-gray-400 mb-6">
-                <MagnifyingGlassIcon className="h-20 w-20 mx-auto" />
+        </div>
+
+        {/* How It Works */}
+        <div className="bg-white rounded-2xl shadow-lg p-12 mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              How It <span className="text-blue-600">Works</span>
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Get your service booked in just 3 simple steps
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="bg-gradient-to-br from-blue-100 to-purple-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl font-bold text-blue-600">1</span>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                No providers found
-              </h3>
-              <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                Try adjusting your search criteria or browse all services to find the perfect professional for your needs.
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Search & Select</h3>
+              <p className="text-gray-600">
+                Browse service categories or search for specific services. 
+                View provider details, ratings, and pricing.
               </p>
-              <button
-                onClick={() => {
-                  setSearchTerm('');
-                  setSelectedServiceType('All Services');
-                }}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg"
-              >
-                Clear Filters
-              </button>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-gradient-to-br from-green-100 to-emerald-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl font-bold text-green-600">2</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Book Service</h3>
+              <p className="text-gray-600">
+                Fill in your details, select preferred date and time. 
+                Get instant confirmation and provider contact.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-gradient-to-br from-purple-100 to-pink-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl font-bold text-purple-600">3</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Get Service</h3>
+              <p className="text-gray-600">
+                Provider arrives on time, completes the service. 
+                Rate and review your experience.
+              </p>
             </div>
           </div>
-        )}
+        </div>
 
         {/* CTA Section */}
-        <div className="mt-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">
-            Can't Find What You're Looking For?
+        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-2xl p-12 text-center text-white">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Ready to Book Your Service?
           </h2>
-          <p className="text-xl text-blue-100 mb-6 max-w-2xl mx-auto">
-            Join our network of service providers and start earning today. We're always looking for skilled professionals.
+          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            Join thousands of satisfied customers who trust us for their local service needs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/provider/register"
-              className="bg-white text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors duration-300 shadow-lg"
+              href="/book"
+              className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors duration-300 shadow-lg"
             >
-              Become a Provider
+              Book a Service Now
             </Link>
             <Link
-              href="/contact"
-              className="border-2 border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300"
+              href="/providers"
+              className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300"
             >
-              Contact Support
+              Browse Providers
             </Link>
           </div>
         </div>

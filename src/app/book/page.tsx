@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import Footer from '@/components/Footer';
 import { 
   CalendarIcon, 
@@ -21,84 +22,139 @@ import {
   ShieldCheckIcon,
   StarIcon,
   CurrencyDollarIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  ArrowLeftIcon,
+  UserGroupIcon,
+  ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
-const serviceTypes = [
-  {
+// Service categories with detailed information
+const serviceCategories = {
+  electrician: {
     id: 'electrician',
     name: 'Electrician',
     icon: BoltIcon,
     color: 'from-yellow-500 to-orange-500',
-    description: 'Electrical repairs, installations, and maintenance',
-    price: '₹500 - ₹2,000',
-    popular: true
+    description: 'Professional electrical services for your home and office',
+    services: {
+      'Home Wiring': { price: '₹1,500 - ₹5,000', time: '4-8 hours', description: 'Complete home electrical wiring and rewiring' },
+      'Switch & Socket Installation': { price: '₹200 - ₹500', time: '1-2 hours', description: 'Installation of switches, sockets, and electrical points' },
+      'Fan & Light Installation': { price: '₹300 - ₹800', time: '1-3 hours', description: 'Ceiling fan and light fixture installation' },
+      'MCB & RCCB Installation': { price: '₹500 - ₹1,500', time: '2-4 hours', description: 'Circuit breaker and safety device installation' },
+      'Emergency Repairs': { price: '₹800 - ₹2,000', time: '1-3 hours', description: '24/7 emergency electrical repair services' },
+      'Electrical Inspection': { price: '₹1,000 - ₹2,500', time: '2-4 hours', description: 'Complete electrical safety inspection' }
+    }
   },
-  {
+  plumber: {
     id: 'plumber',
     name: 'Plumber',
     icon: WrenchScrewdriverIcon,
     color: 'from-blue-500 to-cyan-500',
-    description: 'Plumbing repairs, installations, and maintenance',
-    price: '₹300 - ₹1,500',
-    popular: true
+    description: 'Expert plumbing services for all your water and drainage needs',
+    services: {
+      'Pipe Repair & Replacement': { price: '₹300 - ₹1,200', time: '1-3 hours', description: 'Fix leaking pipes and replace damaged sections' },
+      'Tap & Faucet Installation': { price: '₹200 - ₹800', time: '1-2 hours', description: 'Install new taps, faucets, and bathroom fittings' },
+      'Bathroom Fitting': { price: '₹1,500 - ₹5,000', time: '4-8 hours', description: 'Complete bathroom plumbing and fitting services' },
+      'Water Tank Cleaning': { price: '₹800 - ₹2,000', time: '2-4 hours', description: 'Professional water tank cleaning and maintenance' },
+      'Drain Cleaning': { price: '₹500 - ₹1,500', time: '1-3 hours', description: 'Blocked drain cleaning and maintenance' },
+      'Emergency Repairs': { price: '₹600 - ₹2,000', time: '1-2 hours', description: '24/7 emergency plumbing repair services' }
+    }
   },
-  {
+  'wedding-services': {
     id: 'wedding-services',
     name: 'Wedding Services',
     icon: HeartIcon,
     color: 'from-pink-500 to-rose-500',
-    description: 'Complete wedding planning and arrangements',
-    price: '₹15,000 - ₹50,000',
-    popular: true
+    description: 'Complete wedding planning and arrangements to make your special day perfect',
+    services: {
+      'Pandit Booking': { price: '₹3,000 - ₹8,000', time: '4-8 hours', description: 'Traditional wedding ceremonies and rituals' },
+      'Samagri Supply': { price: '₹2,000 - ₹5,000', time: '1 day', description: 'Complete wedding samagri and puja materials' },
+      'Wedding Decorations': { price: '₹5,000 - ₹20,000', time: '1-2 days', description: 'Beautiful wedding venue decorations' },
+      'Event Management': { price: '₹15,000 - ₹50,000', time: '1-3 days', description: 'Complete wedding event management' },
+      'Photography Services': { price: '₹8,000 - ₹25,000', time: 'Full day', description: 'Professional wedding photography' },
+      'Catering Arrangements': { price: '₹200 - ₹500 per plate', time: '1-2 days', description: 'Wedding catering and food arrangements' }
+    }
   },
-  {
+  tailor: {
     id: 'tailor',
     name: 'Cloth Shop & Tailor',
     icon: ScissorsIcon,
     color: 'from-purple-500 to-indigo-500',
-    description: 'Custom tailoring and alterations',
-    price: '₹200 - ₹5,000',
-    popular: false
+    description: 'Professional tailoring services for men and women',
+    services: {
+      'Custom Suits': { price: '₹2,000 - ₹8,000', time: '7-15 days', description: 'Tailored suits for men and women' },
+      'Alterations': { price: '₹200 - ₹1,000', time: '2-5 days', description: 'Clothing alterations and modifications' },
+      'Ready-made Clothes': { price: '₹500 - ₹3,000', time: 'Immediate', description: 'Quality ready-made clothing' },
+      'Wedding Outfits': { price: '₹3,000 - ₹15,000', time: '10-20 days', description: 'Special wedding and party wear' },
+      'Designer Wear': { price: '₹5,000 - ₹25,000', time: '15-30 days', description: 'Custom designer clothing' },
+      'Uniform Stitching': { price: '₹800 - ₹2,500', time: '5-10 days', description: 'School and office uniforms' }
+    }
   },
-  {
+  'ro-ac': {
     id: 'ro-ac',
     name: 'RO & AC Services',
     icon: CogIcon,
     color: 'from-teal-500 to-emerald-500',
-    description: 'AC repair, RO maintenance, and installations',
-    price: '₹800 - ₹3,000',
-    popular: false
+    description: 'Professional AC repair, RO maintenance, and installation services',
+    services: {
+      'AC Repair & Service': { price: '₹800 - ₹2,500', time: '2-4 hours', description: 'AC repair, maintenance, and servicing' },
+      'RO Water Purifier Service': { price: '₹1,200 - ₹3,000', time: '2-3 hours', description: 'RO purifier installation and maintenance' },
+      'AC Installation': { price: '₹2,000 - ₹5,000', time: '3-5 hours', description: 'New AC installation and setup' },
+      'Gas Filling': { price: '₹1,500 - ₹3,500', time: '1-2 hours', description: 'AC gas filling and leak repair' },
+      'Filter Replacement': { price: '₹500 - ₹1,500', time: '1 hour', description: 'AC and RO filter replacement' },
+      'Maintenance Contract': { price: '₹3,000 - ₹8,000', time: 'Ongoing', description: 'Annual maintenance contracts' }
+    }
   },
-  {
+  beauty: {
     id: 'beauty',
     name: 'Beauty & Wellness',
     icon: SparklesIcon,
     color: 'from-rose-500 to-pink-500',
-    description: 'Hair styling, facials, and beauty treatments',
-    price: '₹500 - ₹2,500',
-    popular: false
-  },
-  {
-    id: 'carpenter',
-    name: 'Carpenter',
-    icon: WrenchScrewdriverIcon,
-    color: 'from-amber-500 to-yellow-500',
-    description: 'Furniture making, repairs, and custom work',
-    price: '₹1,000 - ₹8,000',
-    popular: false
-  },
-  {
-    id: 'painter',
-    name: 'Painter',
-    icon: PaintBrushIcon,
-    color: 'from-red-500 to-pink-500',
-    description: 'Interior and exterior painting services',
-    price: '₹2,000 - ₹15,000',
-    popular: false
+    description: 'Full-service beauty salon offering haircuts, styling, and treatments',
+    services: {
+      'Hair Cut & Style': { price: '₹300 - ₹1,500', time: '1-2 hours', description: 'Professional haircuts and styling' },
+      'Facial Treatment': { price: '₹800 - ₹2,500', time: '1-2 hours', description: 'Rejuvenating facial treatments' },
+      'Manicure & Pedicure': { price: '₹500 - ₹1,500', time: '1-2 hours', description: 'Nail care and grooming services' },
+      'Bridal Makeup': { price: '₹3,000 - ₹8,000', time: '3-5 hours', description: 'Professional bridal makeup services' },
+      'Spa Services': { price: '₹1,500 - ₹4,000', time: '2-4 hours', description: 'Relaxing spa and wellness treatments' },
+      'Hair Coloring': { price: '₹1,000 - ₹3,000', time: '2-4 hours', description: 'Professional hair coloring services' }
+    }
   }
-];
+};
+
+// Sample providers for each category
+const getCategoryProviders = (categoryId: string) => {
+  const providers = {
+    electrician: [
+      { id: '1', name: 'Rajesh Kumar', businessName: 'Rajesh Electrical Services', rating: 4.8, reviews: 127, experience: '10+ years', specialties: ['Home Wiring', 'Emergency Repairs'], available: true },
+      { id: '2', name: 'Vikram Singh', businessName: 'Vikram Electric Works', rating: 4.7, reviews: 89, experience: '8+ years', specialties: ['Switch Installation', 'MCB Repair'], available: true },
+      { id: '3', name: 'Amit Sharma', businessName: 'Sharma Electrical Solutions', rating: 4.9, reviews: 156, experience: '12+ years', specialties: ['Fan Installation', 'Electrical Inspection'], available: true }
+    ],
+    plumber: [
+      { id: '4', name: 'Ravi Kumar', businessName: 'Ravi Plumbing Works', rating: 4.6, reviews: 98, experience: '9+ years', specialties: ['Pipe Repair', 'Bathroom Fitting'], available: true },
+      { id: '5', name: 'Suresh Gupta', businessName: 'Gupta Plumbing Services', rating: 4.8, reviews: 134, experience: '11+ years', specialties: ['Water Tank Cleaning', 'Emergency Repairs'], available: true }
+    ],
+    'wedding-services': [
+      { id: '6', name: 'Priya Singh', businessName: 'Priya Wedding Services', rating: 4.9, reviews: 156, experience: '12+ years', specialties: ['Wedding Planning', 'Decorations'], available: true },
+      { id: '7', name: 'Rajesh Pandit', businessName: 'Traditional Wedding Services', rating: 4.8, reviews: 89, experience: '15+ years', specialties: ['Pandit Booking', 'Samagri Supply'], available: true }
+    ],
+    tailor: [
+      { id: '8', name: 'Vikram Tailor', businessName: 'Vikram Tailoring House', rating: 4.7, reviews: 203, experience: '15+ years', specialties: ['Custom Suits', 'Alterations'], available: true },
+      { id: '9', name: 'Sunita Devi', businessName: 'Sunita Fashion House', rating: 4.6, reviews: 145, experience: '10+ years', specialties: ['Wedding Outfits', 'Designer Wear'], available: true }
+    ],
+    'ro-ac': [
+      { id: '10', name: 'Rohit AC Services', businessName: 'Cool Air Solutions', rating: 4.5, reviews: 78, experience: '6+ years', specialties: ['AC Repair', 'RO Services'], available: true },
+      { id: '11', name: 'Manoj Kumar', businessName: 'Manoj AC & RO Services', rating: 4.7, reviews: 112, experience: '8+ years', specialties: ['AC Installation', 'Maintenance'], available: true }
+    ],
+    beauty: [
+      { id: '12', name: 'Beauty Palace', businessName: 'Beauty Palace Salon', rating: 4.8, reviews: 134, experience: '9+ years', specialties: ['Hair Styling', 'Facials'], available: true },
+      { id: '13', name: 'Priya Beauty', businessName: 'Priya Beauty Studio', rating: 4.7, reviews: 98, experience: '7+ years', specialties: ['Bridal Makeup', 'Spa Services'], available: true }
+    ]
+  };
+  
+  return providers[categoryId as keyof typeof providers] || [];
+};
 
 const timeSlots = [
   '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
@@ -110,9 +166,23 @@ export default function BookService() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const providerId = searchParams.get('provider');
+  const serviceName = searchParams.get('service');
+  const categoryId = searchParams.get('category');
   
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(() => {
+    // Check if we have URL parameters on initial load
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const service = urlParams.get('service');
+      const category = urlParams.get('category');
+      if (service && category) {
+        return 2; // Start at step 2 if service is pre-selected
+      }
+    }
+    return 1;
+  });
   const [selectedService, setSelectedService] = useState<any>(null);
+  const [selectedProvider, setSelectedProvider] = useState<any>(null);
   const [formData, setFormData] = useState({
     customerName: '',
     customerPhone: '',
@@ -126,6 +196,67 @@ export default function BookService() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Initialize service and provider based on URL parameters
+  useEffect(() => {
+    if (categoryId && serviceName) {
+      const category = serviceCategories[categoryId as keyof typeof serviceCategories];
+      
+      if (category && category.services[serviceName as keyof typeof category.services]) {
+        const serviceInfo = category.services[serviceName as keyof typeof category.services] as any;
+        
+        setSelectedService({
+          name: serviceName,
+          category: category,
+          price: serviceInfo.price,
+          time: serviceInfo.time,
+          description: serviceInfo.description
+        });
+        setFormData(prev => ({
+          ...prev,
+          serviceType: serviceName
+        }));
+        // If service is pre-selected, go to step 2 (provider selection)
+        setCurrentStep(2);
+      } else {
+        // Fallback: create a basic service object if not found
+        if (category) {
+          setSelectedService({
+            name: serviceName,
+            category: category,
+            price: 'Contact for pricing',
+            time: 'Contact for timing',
+            description: `${serviceName} service`
+          });
+          setFormData(prev => ({
+            ...prev,
+            serviceType: serviceName
+          }));
+          setCurrentStep(2);
+        }
+      }
+    }
+    
+    if (providerId) {
+      // Find provider in all categories
+      const allProviders = Object.values(serviceCategories).flatMap(cat => 
+        getCategoryProviders(cat.id)
+      );
+      const provider = allProviders.find(p => p.id === providerId);
+      if (provider) {
+        setSelectedProvider(provider);
+        // If provider is pre-selected, go to step 3 (booking form)
+        setCurrentStep(3);
+      }
+    }
+  }, [categoryId, serviceName, providerId]);
+
+  // Additional useEffect to handle step transition when service is selected
+  useEffect(() => {
+    if (selectedService && currentStep === 1) {
+      setCurrentStep(2);
+    }
+  }, [selectedService, currentStep]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -142,6 +273,11 @@ export default function BookService() {
       serviceType: service.name
     }));
     setCurrentStep(2);
+  };
+
+  const handleProviderSelect = (provider: any) => {
+    setSelectedProvider(provider);
+    setCurrentStep(3);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -237,14 +373,14 @@ export default function BookService() {
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 2 ? 'bg-yellow-300 text-blue-600' : 'bg-white/20'}`}>
                   2
                 </div>
-                <span className="ml-2 text-sm font-medium">Fill Details</span>
+                <span className="ml-2 text-sm font-medium">Select Provider</span>
               </div>
               <div className={`w-8 h-0.5 ${currentStep >= 3 ? 'bg-yellow-300' : 'bg-white/20'}`}></div>
               <div className={`flex items-center ${currentStep >= 3 ? 'text-yellow-300' : 'text-white/50'}`}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 3 ? 'bg-yellow-300 text-blue-600' : 'bg-white/20'}`}>
                   3
                 </div>
-                <span className="ml-2 text-sm font-medium">Confirm</span>
+                <span className="ml-2 text-sm font-medium">Book Service</span>
               </div>
             </div>
           </div>
@@ -252,7 +388,9 @@ export default function BookService() {
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {currentStep === 1 && (
+
+        {/* Step 1: Service Selection (only if no service pre-selected) */}
+        {currentStep === 1 && !selectedService && (
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -264,34 +402,26 @@ export default function BookService() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {serviceTypes.map((service) => {
-                const Icon = service.icon;
+              {Object.values(serviceCategories).map((category) => {
+                const Icon = category.icon;
                 return (
                   <div
-                    key={service.id}
-                    onClick={() => handleServiceSelect(service)}
+                    key={category.id}
+                    onClick={() => setCurrentStep(2)}
                     className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 cursor-pointer group border-2 border-transparent hover:border-blue-200"
                   >
-                    <div className={`bg-gradient-to-r ${service.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <div className={`bg-gradient-to-r ${category.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                       <Icon className="h-8 w-8 text-white" />
                     </div>
                     
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-bold text-gray-900">{service.name}</h3>
-                      {service.popular && (
-                        <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs px-2 py-1 rounded-full font-medium">
-                          Popular
-                        </span>
-                      )}
-                    </div>
-                    
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">{category.name}</h3>
                     <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                      {service.description}
+                      {category.description}
                     </p>
                     
                     <div className="flex items-center justify-between">
-                      <div className="text-sm font-semibold text-gray-900">
-                        {service.price}
+                      <div className="text-sm font-semibold text-blue-600">
+                        Browse Services
                       </div>
                       <ArrowRightIcon className="h-5 w-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
                     </div>
@@ -302,41 +432,140 @@ export default function BookService() {
           </div>
         )}
 
-        {currentStep === 2 && (
+        {/* Step 2: Provider Selection */}
+        {currentStep === 2 && selectedService && (
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    Select a Provider
+                  </h2>
+                  <p className="text-gray-600">
+                    Choose from our verified {selectedService.category.name.toLowerCase()} professionals
+                  </p>
+                </div>
+                <button
+                  onClick={() => setCurrentStep(1)}
+                  className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
+                >
+                  <ArrowLeftIcon className="h-4 w-4 mr-1" />
+                  Back
+                </button>
+              </div>
+
+              {/* Selected Service Summary */}
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8">
+                <div className="flex items-center">
+                  <div className={`bg-gradient-to-r ${selectedService.category.color} w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
+                    <selectedService.category.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900">{selectedService.name}</h3>
+                    <p className="text-sm text-gray-600">{selectedService.description}</p>
+                    <div className="flex items-center mt-2">
+                      <span className="text-sm font-semibold text-blue-600 mr-4">{selectedService.price}</span>
+                      <span className="text-sm text-gray-500">{selectedService.time}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Providers List */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {getCategoryProviders(selectedService.category.id).map((provider) => (
+                  <div
+                    key={provider.id}
+                    onClick={() => handleProviderSelect(provider)}
+                    className="border-2 border-gray-200 rounded-xl p-6 hover:border-blue-300 hover:shadow-lg transition-all duration-300 cursor-pointer group"
+                  >
+                    <div className="flex items-center mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-4">
+                        <UserGroupIcon className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">{provider.name}</h3>
+                        <p className="text-sm text-gray-600">{provider.businessName}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center mb-3">
+                      <StarIconSolid className="h-4 w-4 text-yellow-400 mr-1" />
+                      <span className="text-sm font-semibold text-gray-900">{provider.rating}</span>
+                      <span className="text-sm text-gray-500 ml-2">({provider.reviews} reviews)</span>
+                    </div>
+                    
+                    <div className="mb-3">
+                      <div className="text-xs text-gray-500 mb-1">Specialties:</div>
+                      <div className="flex flex-wrap gap-1">
+                        {provider.specialties.map((specialty, index) => (
+                          <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs">
+                            {specialty}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs text-gray-500">Experience</div>
+                        <div className="text-sm font-semibold text-gray-900">{provider.experience}</div>
+                      </div>
+                      <ArrowRightIcon className="h-5 w-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Booking Form */}
+        {currentStep === 3 && selectedService && selectedProvider && (
           <div className="max-w-2xl mx-auto">
             <div className="bg-white rounded-2xl shadow-lg p-8">
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                    Service Details
+                    Complete Your Booking
                   </h2>
                   <p className="text-gray-600">
-                    Fill in your information and service requirements
+                    Fill in your details to book the service
                   </p>
                 </div>
                 <button
-                  onClick={() => setCurrentStep(1)}
-                  className="text-blue-600 hover:text-blue-800 font-medium"
+                  onClick={() => setCurrentStep(2)}
+                  className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
                 >
-                  Change Service
+                  <ArrowLeftIcon className="h-4 w-4 mr-1" />
+                  Back
                 </button>
               </div>
 
-              {/* Selected Service Summary */}
-              {selectedService && (
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8">
+              {/* Service & Provider Summary */}
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-8">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <div className={`bg-gradient-to-r ${selectedService.color} w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
-                      <selectedService.icon className="h-6 w-6 text-white" />
+                    <div className={`bg-gradient-to-r ${selectedService.category.color} w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
+                      <selectedService.category.icon className="h-6 w-6 text-white" />
                     </div>
                     <div>
                       <h3 className="font-bold text-gray-900">{selectedService.name}</h3>
-                      <p className="text-sm text-gray-600">{selectedService.description}</p>
-                      <p className="text-sm font-semibold text-blue-600">{selectedService.price}</p>
+                      <p className="text-sm text-gray-600">with {selectedProvider.name}</p>
+                      <div className="flex items-center mt-1">
+                        <StarIconSolid className="h-4 w-4 text-yellow-400 mr-1" />
+                        <span className="text-sm font-semibold text-gray-900">{selectedProvider.rating}</span>
+                        <span className="text-sm text-gray-500 ml-2">({selectedProvider.reviews} reviews)</span>
+                      </div>
                     </div>
                   </div>
+                  <div className="text-right">
+                    <div className="text-sm text-gray-600">Estimated Price</div>
+                    <div className="font-bold text-lg text-gray-900">{selectedService.price}</div>
+                    <div className="text-sm text-gray-500">{selectedService.time}</div>
+                  </div>
                 </div>
-              )}
+              </div>
 
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Customer Information */}
@@ -396,7 +625,7 @@ export default function BookService() {
                   </div>
                 </div>
 
-                {/* Service Information */}
+                {/* Service Schedule */}
                 <div className="space-y-6">
                   <h3 className="text-xl font-bold text-gray-900 flex items-center">
                     <CalendarIcon className="h-6 w-6 mr-3 text-blue-600" />
@@ -510,14 +739,13 @@ export default function BookService() {
                     disabled={isSubmitting}
                     className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg text-lg"
                   >
-                    {isSubmitting ? 'Submitting...' : 'Submit Booking Request'}
+                    {isSubmitting ? 'Submitting...' : 'Confirm Booking'}
                   </button>
                 </div>
 
                 <div className="text-center">
                   <p className="text-sm text-gray-500 leading-relaxed">
-                    We'll connect you with verified service providers in your area. 
-                    You'll receive confirmation within 2 hours.
+                    We'll connect you with {selectedProvider.name} and send confirmation within 2 hours.
                   </p>
                 </div>
               </form>

@@ -17,17 +17,17 @@ import {
   CogIcon,
   HeartIcon,
   PaintBrushIcon,
-  HammerIcon,
-  CheckCircleIcon,
   ClockIcon,
   UserGroupIcon,
   ChatBubbleLeftRightIcon,
   CurrencyDollarIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  CheckCircleIcon,
+  EyeIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
-// Enhanced mock data with more details
+// Enhanced provider data with business information
 const mockProviders = [
   {
     id: '1',
@@ -36,16 +36,26 @@ const mockProviders = [
     serviceType: 'Electrician',
     address: 'Sector 15, Noida',
     phone: '+91 98765 43210',
+    email: 'rajesh@electricalservices.com',
     rating: 4.8,
     totalReviews: 127,
-    description: 'Professional electrician with 10+ years of experience. Specializes in home wiring, repairs, and installations.',
+    description: 'Professional electrician with 10+ years of experience. Specializes in home wiring, repairs, and installations. Available 24/7 for emergency services.',
     photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
+    businessPhoto: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=300&fit=crop',
     isApproved: true,
     experience: '10+ years',
     responseTime: '1 hour',
     price: '₹500 - ₹2,000',
     verified: true,
-    specialties: ['Home Wiring', 'Emergency Repairs', 'Installations']
+    specialties: ['Home Wiring', 'Emergency Repairs', 'Installations'],
+    languages: ['Hindi', 'English'],
+    workingHours: '9:00 AM - 8:00 PM (Mon-Sat)',
+    completedJobs: 450,
+    joinDate: '2022-01-15',
+    businessType: 'Individual Professional',
+    licenseNumber: 'ELC-UP-2022-001',
+    insurance: true,
+    warranty: '6 months'
   },
   {
     id: '2',
@@ -54,16 +64,26 @@ const mockProviders = [
     serviceType: 'Plumber',
     address: 'Sector 18, Noida',
     phone: '+91 98765 43211',
+    email: 'amit@sharmaplumbing.com',
     rating: 4.6,
     totalReviews: 89,
-    description: 'Expert plumber offering 24/7 emergency services. All types of plumbing repairs and installations.',
+    description: 'Expert plumber offering 24/7 emergency services. All types of plumbing repairs and installations with quality guarantee.',
     photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face',
+    businessPhoto: 'https://images.unsplash.com/photo-1581578731548-c6a0c3f2f6c5?w=400&h=300&fit=crop',
     isApproved: true,
     experience: '8+ years',
     responseTime: '2 hours',
     price: '₹300 - ₹1,500',
     verified: true,
-    specialties: ['Emergency Repairs', 'Installations', 'Maintenance']
+    specialties: ['Emergency Repairs', 'Installations', 'Maintenance'],
+    languages: ['Hindi', 'English', 'Punjabi'],
+    workingHours: '8:00 AM - 7:00 PM (Mon-Sat)',
+    completedJobs: 320,
+    joinDate: '2022-03-20',
+    businessType: 'Small Business',
+    licenseNumber: 'PLB-UP-2022-002',
+    insurance: true,
+    warranty: '3 months'
   },
   {
     id: '3',
@@ -72,16 +92,26 @@ const mockProviders = [
     serviceType: 'Wedding Services',
     address: 'Sector 22, Noida',
     phone: '+91 98765 43212',
+    email: 'priya@weddingservices.com',
     rating: 4.9,
     totalReviews: 156,
-    description: 'Complete wedding services including pandit booking, samagri, decorations, and event management.',
+    description: 'Complete wedding services including pandit booking, samagri, decorations, and event management. With over 12 years of experience.',
     photo: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face',
+    businessPhoto: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop',
     isApproved: true,
     experience: '12+ years',
     responseTime: '4 hours',
     price: '₹15,000 - ₹50,000',
     verified: true,
-    specialties: ['Wedding Planning', 'Decorations', 'Event Management']
+    specialties: ['Wedding Planning', 'Decorations', 'Event Management'],
+    languages: ['Hindi', 'English', 'Punjabi'],
+    workingHours: '9:00 AM - 8:00 PM (Mon-Sat)',
+    completedJobs: 500,
+    joinDate: '2021-11-10',
+    businessType: 'Event Management Company',
+    licenseNumber: 'WED-UP-2021-001',
+    insurance: true,
+    warranty: 'Event completion'
   },
   {
     id: '4',
@@ -90,16 +120,26 @@ const mockProviders = [
     serviceType: 'Cloth Shop & Tailor',
     address: 'Sector 12, Noida',
     phone: '+91 98765 43213',
+    email: 'vikram@tailoringhouse.com',
     rating: 4.7,
     totalReviews: 203,
-    description: 'Professional tailoring services for men and women. Custom suits, alterations, and ready-made clothing.',
+    description: 'Professional tailoring services for men and women. Custom suits, alterations, and ready-made clothing with premium quality.',
     photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face',
+    businessPhoto: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=400&h=300&fit=crop',
     isApproved: true,
     experience: '15+ years',
     responseTime: '1 day',
     price: '₹200 - ₹5,000',
     verified: true,
-    specialties: ['Custom Suits', 'Alterations', 'Ready-made']
+    specialties: ['Custom Suits', 'Alterations', 'Ready-made'],
+    languages: ['Hindi', 'English'],
+    workingHours: '10:00 AM - 8:00 PM (Mon-Sat)',
+    completedJobs: 1200,
+    joinDate: '2021-08-05',
+    businessType: 'Retail Shop',
+    licenseNumber: 'TAI-UP-2021-003',
+    insurance: false,
+    warranty: '1 month'
   },
   {
     id: '5',
@@ -108,16 +148,26 @@ const mockProviders = [
     serviceType: 'RO & AC Services',
     address: 'Sector 25, Noida',
     phone: '+91 98765 43214',
+    email: 'rohit@coolairsolutions.com',
     rating: 4.5,
     totalReviews: 78,
-    description: 'AC repair, maintenance, and installation services. Also provides RO water purifier services.',
+    description: 'AC repair, maintenance, and installation services. Also provides RO water purifier services with genuine parts guarantee.',
     photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
+    businessPhoto: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop',
     isApproved: true,
     experience: '6+ years',
     responseTime: '3 hours',
     price: '₹800 - ₹3,000',
     verified: true,
-    specialties: ['AC Repair', 'RO Services', 'Maintenance']
+    specialties: ['AC Repair', 'RO Services', 'Maintenance'],
+    languages: ['Hindi', 'English'],
+    workingHours: '8:00 AM - 7:00 PM (Mon-Sat)',
+    completedJobs: 280,
+    joinDate: '2022-06-12',
+    businessType: 'Service Center',
+    licenseNumber: 'ACR-UP-2022-004',
+    insurance: true,
+    warranty: '1 year'
   },
   {
     id: '6',
@@ -126,65 +176,37 @@ const mockProviders = [
     serviceType: 'Beauty & Wellness',
     address: 'Sector 16, Noida',
     phone: '+91 98765 43215',
+    email: 'info@beautypalace.com',
     rating: 4.8,
     totalReviews: 134,
-    description: 'Full-service beauty salon offering haircuts, styling, facials, and other beauty treatments.',
+    description: 'Full-service beauty salon offering haircuts, styling, facials, and other beauty treatments with modern equipment.',
     photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face',
+    businessPhoto: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop',
     isApproved: true,
     experience: '9+ years',
     responseTime: '2 hours',
     price: '₹500 - ₹2,500',
     verified: true,
-    specialties: ['Hair Styling', 'Facials', 'Beauty Treatments']
-  },
-  {
-    id: '7',
-    name: 'Suresh Carpenter',
-    businessName: 'Suresh Wood Works',
-    serviceType: 'Carpenter',
-    address: 'Sector 20, Noida',
-    phone: '+91 98765 43216',
-    rating: 4.4,
-    totalReviews: 67,
-    description: 'Expert carpenter specializing in furniture making, repairs, and custom woodwork.',
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
-    isApproved: true,
-    experience: '11+ years',
-    responseTime: '1 day',
-    price: '₹1,000 - ₹8,000',
-    verified: true,
-    specialties: ['Furniture Making', 'Repairs', 'Custom Work']
-  },
-  {
-    id: '8',
-    name: 'Ravi Painter',
-    businessName: 'Ravi Paint House',
-    serviceType: 'Painter',
-    address: 'Sector 14, Noida',
-    phone: '+91 98765 43217',
-    rating: 4.6,
-    totalReviews: 92,
-    description: 'Professional painting services for homes and offices. Interior and exterior painting.',
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
-    isApproved: true,
-    experience: '7+ years',
-    responseTime: '1 day',
-    price: '₹2,000 - ₹15,000',
-    verified: true,
-    specialties: ['Interior Painting', 'Exterior Painting', 'Wall Art']
+    specialties: ['Hair Styling', 'Facials', 'Beauty Treatments'],
+    languages: ['Hindi', 'English'],
+    workingHours: '9:00 AM - 8:00 PM (Mon-Sat)',
+    completedJobs: 890,
+    joinDate: '2021-12-01',
+    businessType: 'Beauty Salon',
+    licenseNumber: 'BEA-UP-2021-005',
+    insurance: true,
+    warranty: 'Service satisfaction'
   }
 ];
 
 const serviceTypes = [
-  'All Services',
+  'All Providers',
   'Electrician',
   'Plumber',
   'Wedding Services',
   'Cloth Shop & Tailor',
   'RO & AC Services',
-  'Beauty & Wellness',
-  'Carpenter',
-  'Painter'
+  'Beauty & Wellness'
 ];
 
 const serviceIcons = {
@@ -193,9 +215,7 @@ const serviceIcons = {
   'Wedding Services': HeartIcon,
   'Cloth Shop & Tailor': ScissorsIcon,
   'RO & AC Services': CogIcon,
-  'Beauty & Wellness': SparklesIcon,
-  'Carpenter': HammerIcon,
-  'Painter': PaintBrushIcon
+  'Beauty & Wellness': SparklesIcon
 };
 
 const serviceColors = {
@@ -204,16 +224,14 @@ const serviceColors = {
   'Wedding Services': 'from-pink-500 to-rose-500',
   'Cloth Shop & Tailor': 'from-purple-500 to-indigo-500',
   'RO & AC Services': 'from-teal-500 to-emerald-500',
-  'Beauty & Wellness': 'from-rose-500 to-pink-500',
-  'Carpenter': 'from-amber-500 to-yellow-500',
-  'Painter': 'from-red-500 to-pink-500'
+  'Beauty & Wellness': 'from-rose-500 to-pink-500'
 };
 
 export default function ProvidersPage() {
   const [providers, setProviders] = useState(mockProviders);
   const [filteredProviders, setFilteredProviders] = useState(mockProviders);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedServiceType, setSelectedServiceType] = useState('All Services');
+  const [selectedServiceType, setSelectedServiceType] = useState('All Providers');
   const [sortBy, setSortBy] = useState('rating');
   const [showFilters, setShowFilters] = useState(false);
 
@@ -221,7 +239,7 @@ export default function ProvidersPage() {
     let filtered = providers;
 
     // Filter by service type
-    if (selectedServiceType !== 'All Services') {
+    if (selectedServiceType !== 'All Providers') {
       filtered = filtered.filter(provider => provider.serviceType === selectedServiceType);
     }
 
@@ -230,7 +248,10 @@ export default function ProvidersPage() {
       filtered = filtered.filter(provider => 
         provider.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         provider.businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        provider.address.toLowerCase().includes(searchTerm.toLowerCase())
+        provider.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        provider.specialties.some(specialty => 
+          specialty.toLowerCase().includes(searchTerm.toLowerCase())
+        )
       );
     }
 
@@ -241,10 +262,12 @@ export default function ProvidersPage() {
           return b.rating - a.rating;
         case 'reviews':
           return b.totalReviews - a.totalReviews;
+        case 'experience':
+          return parseInt(b.experience) - parseInt(a.experience);
+        case 'jobs':
+          return b.completedJobs - a.completedJobs;
         case 'name':
           return a.name.localeCompare(b.name);
-        case 'price':
-          return a.price.localeCompare(b.price);
         default:
           return 0;
       }
@@ -273,7 +296,7 @@ export default function ProvidersPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600 overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-full opacity-30">
@@ -286,10 +309,10 @@ export default function ProvidersPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center text-white">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Our <span className="text-yellow-300">Expert</span> Providers
+              Meet Our <span className="text-yellow-300">Expert</span> Providers
             </h1>
-            <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Meet our verified and trusted service providers. All providers are background-checked, 
+            <p className="text-xl md:text-2xl text-green-100 mb-8 max-w-3xl mx-auto leading-relaxed">
+              Discover verified service providers in your area. Each provider is background-checked, 
               rated by real customers, and committed to delivering exceptional service.
             </p>
             
@@ -297,19 +320,19 @@ export default function ProvidersPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12">
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-white mb-2">{providers.length}+</div>
-                <div className="text-sm text-blue-200">Verified Providers</div>
+                <div className="text-sm text-green-200">Verified Providers</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-white mb-2">4.7★</div>
-                <div className="text-sm text-blue-200">Average Rating</div>
+                <div className="text-sm text-green-200">Average Rating</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2">1000+</div>
-                <div className="text-sm text-blue-200">Happy Customers</div>
+                <div className="text-3xl md:text-4xl font-bold text-white mb-2">3000+</div>
+                <div className="text-sm text-green-200">Jobs Completed</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-white mb-2">24/7</div>
-                <div className="text-sm text-blue-200">Support Available</div>
+                <div className="text-sm text-green-200">Support Available</div>
               </div>
             </div>
           </div>
@@ -325,10 +348,10 @@ export default function ProvidersPage() {
               <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search by name, business, or location..."
+                placeholder="Search by name, business, location, or specialty..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg"
               />
             </div>
 
@@ -337,7 +360,7 @@ export default function ProvidersPage() {
               <select
                 value={selectedServiceType}
                 onChange={(e) => setSelectedServiceType(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg"
               >
                 {serviceTypes.map((type) => (
                   <option key={type} value={type}>{type}</option>
@@ -350,22 +373,15 @@ export default function ProvidersPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg"
               >
                 <option value="rating">Sort by Rating</option>
                 <option value="reviews">Sort by Reviews</option>
+                <option value="experience">Sort by Experience</option>
+                <option value="jobs">Sort by Jobs Done</option>
                 <option value="name">Sort by Name</option>
-                <option value="price">Sort by Price</option>
               </select>
             </div>
-
-            {/* Filter Toggle */}
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="lg:hidden bg-gray-100 hover:bg-gray-200 px-4 py-3 rounded-xl transition-colors"
-            >
-              <FunnelIcon className="h-5 w-5" />
-            </button>
           </div>
         </div>
 
@@ -373,15 +389,15 @@ export default function ProvidersPage() {
         <div className="mb-6">
           <p className="text-gray-600 text-lg">
             Showing <span className="font-semibold text-gray-900">{filteredProviders.length}</span> service provider{filteredProviders.length !== 1 ? 's' : ''}
-            {selectedServiceType !== 'All Services' && (
-              <span> for <span className="font-semibold text-blue-600">{selectedServiceType}</span></span>
+            {selectedServiceType !== 'All Providers' && (
+              <span> for <span className="font-semibold text-green-600">{selectedServiceType}</span></span>
             )}
           </p>
         </div>
 
         {/* Providers Grid */}
         {filteredProviders.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {filteredProviders.map((provider) => {
               const ServiceIcon = serviceIcons[provider.serviceType as keyof typeof serviceIcons] || SparklesIcon;
               const serviceColor = serviceColors[provider.serviceType as keyof typeof serviceColors] || 'from-gray-500 to-gray-600';
@@ -408,9 +424,7 @@ export default function ProvidersPage() {
                             )}
                           </div>
                           <h3 className="text-xl font-bold mb-1">{provider.name}</h3>
-                          {provider.businessName && (
-                            <p className="text-white/90 text-sm">{provider.businessName}</p>
-                          )}
+                          <p className="text-white/90 text-sm">{provider.businessName}</p>
                         </div>
                         <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
                           <ServiceIcon className="h-8 w-8 text-white" />
@@ -430,7 +444,16 @@ export default function ProvidersPage() {
                   </div>
 
                   <div className="p-6">
-                    {/* Provider Photo */}
+                    {/* Business Photo */}
+                    <div className="mb-4">
+                      <img
+                        src={provider.businessPhoto}
+                        alt={provider.businessName}
+                        className="w-full h-32 object-cover rounded-xl"
+                      />
+                    </div>
+
+                    {/* Provider Info */}
                     <div className="flex items-center mb-4">
                       <img
                         src={provider.photo}
@@ -444,7 +467,7 @@ export default function ProvidersPage() {
                     </div>
 
                     {/* Description */}
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
                       {provider.description}
                     </p>
 
@@ -452,27 +475,39 @@ export default function ProvidersPage() {
                     <div className="mb-4">
                       <div className="text-sm font-medium text-gray-900 mb-2">Specialties:</div>
                       <div className="flex flex-wrap gap-1">
-                        {provider.specialties.slice(0, 2).map((specialty, index) => (
+                        {provider.specialties.slice(0, 3).map((specialty, index) => (
                           <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs">
                             {specialty}
                           </span>
                         ))}
-                        {provider.specialties.length > 2 && (
+                        {provider.specialties.length > 3 && (
                           <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs">
-                            +{provider.specialties.length - 2} more
+                            +{provider.specialties.length - 3} more
                           </span>
                         )}
                       </div>
                     </div>
 
-                    {/* Location */}
+                    {/* Business Details */}
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <div className="text-xs text-gray-500">Business Type</div>
+                        <div className="text-sm font-medium text-gray-900">{provider.businessType}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500">Jobs Completed</div>
+                        <div className="text-sm font-medium text-gray-900">{provider.completedJobs}+</div>
+                      </div>
+                    </div>
+
+                    {/* Location & Contact */}
                     <div className="flex items-center text-sm text-gray-500 mb-4">
                       <MapPinIcon className="h-4 w-4 mr-2" />
                       {provider.address}
                     </div>
 
-                    {/* Price */}
-                    <div className="flex items-center justify-between mb-6">
+                    {/* Price & Actions */}
+                    <div className="flex items-center justify-between mb-4">
                       <div>
                         <div className="text-sm text-gray-600">Starting from</div>
                         <div className="font-bold text-lg text-gray-900">{provider.price}</div>
@@ -487,13 +522,13 @@ export default function ProvidersPage() {
                     <div className="flex gap-3">
                       <Link
                         href={`/providers/${provider.id}`}
-                        className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center py-3 px-4 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg"
+                        className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-center py-3 px-4 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 font-semibold shadow-lg"
                       >
-                        View Details
+                        View Profile
                       </Link>
                       <Link
                         href={`/book?provider=${provider.id}`}
-                        className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-center py-3 px-4 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 font-semibold shadow-lg"
+                        className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center py-3 px-4 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg"
                       >
                         Book Now
                       </Link>
@@ -512,14 +547,14 @@ export default function ProvidersPage() {
               No providers found
             </h3>
             <p className="text-gray-600 mb-8 text-lg">
-              Try adjusting your search criteria or browse all services
+              Try adjusting your search criteria or browse all providers
             </p>
             <button
               onClick={() => {
                 setSearchTerm('');
-                setSelectedServiceType('All Services');
+                setSelectedServiceType('All Providers');
               }}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg"
+              className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-3 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 font-semibold shadow-lg"
             >
               Clear Filters
             </button>
@@ -530,7 +565,7 @@ export default function ProvidersPage() {
         <div className="mt-20 bg-white rounded-2xl shadow-lg p-12">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Why Choose Our <span className="text-blue-600">Providers?</span>
+              Why Choose Our <span className="text-green-600">Providers?</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
               All our service providers go through a rigorous verification process to ensure quality, 
@@ -590,23 +625,23 @@ export default function ProvidersPage() {
         </div>
 
         {/* CTA Section */}
-        <div className="mt-16 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-2xl p-12 text-center text-white">
+        <div className="mt-16 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-2xl p-12 text-center text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Ready to Find Your Perfect Service Provider?
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
             Join thousands of satisfied customers who trust our verified service providers for all their needs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/services"
-              className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors duration-300 shadow-lg"
+              className="bg-white text-green-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors duration-300 shadow-lg"
             >
-              Browse All Services
+              Browse Services
             </Link>
             <Link
               href="/book"
-              className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300"
+              className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-green-600 transition-all duration-300"
             >
               Book a Service Now
             </Link>
