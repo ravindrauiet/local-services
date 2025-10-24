@@ -111,16 +111,17 @@ export async function GET(request: NextRequest) {
     // 2. Fetch settings from Firebase
     // 3. Apply user-specific permissions
 
-    let settings = mockSettings;
-
     // Return specific section if requested
     if (section && section in mockSettings) {
-      settings = { [section]: mockSettings[section as keyof typeof mockSettings] };
+      return NextResponse.json({
+        success: true,
+        data: { [section]: mockSettings[section as keyof typeof mockSettings] }
+      });
     }
 
     return NextResponse.json({
       success: true,
-      data: settings
+      data: mockSettings
     });
   } catch (error) {
     console.error('Error fetching settings:', error);
