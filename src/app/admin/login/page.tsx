@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import { 
   EnvelopeIcon, 
@@ -179,12 +180,12 @@ export default function AdminLoginPage() {
           </div>
 
           <div className="mt-6 text-center">
-            <a
+            <Link
               href="/"
               className="text-sm text-blue-600 hover:text-blue-500"
             >
               ← Back to main site
-            </a>
+            </Link>
           </div>
         </div>
       </div>

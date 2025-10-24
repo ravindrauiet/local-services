@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Footer from '@/components/Footer';
 import { 
   UserIcon, 
@@ -107,7 +108,7 @@ const serviceTypes = [
 export default function ProviderRegistration() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedService, setSelectedService] = useState<any>(null);
+  const [selectedService, setSelectedService] = useState<{id: string, name: string, color: string, description: string, earnings: string, demand: string, features: string[]} | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     businessName: '',
@@ -139,7 +140,7 @@ export default function ProviderRegistration() {
     }));
   };
 
-  const handleServiceSelect = (service: any) => {
+  const handleServiceSelect = (service: {id: string, name: string, color: string, description: string, earnings: string, demand: string, features: string[]}) => {
     setSelectedService(service);
     setFormData(prev => ({
       ...prev,
@@ -195,7 +196,7 @@ export default function ProviderRegistration() {
             </p>
           </div>
           <p className="text-sm text-gray-500">
-            You'll be redirected to the home page shortly...
+            You&apos;ll be redirected to the home page shortly...
           </p>
         </div>
       </div>
@@ -626,12 +627,12 @@ export default function ProviderRegistration() {
             >
               Start Registration
             </button>
-            <a
+            <Link
               href="/services"
               className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-green-600 transition-all duration-300"
             >
               Browse Services
-            </a>
+            </Link>
           </div>
         </div>
       </div>

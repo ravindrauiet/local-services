@@ -194,7 +194,7 @@ export default function FirebaseSetupGuide() {
               href="/admin/setup"
               className="flex items-center justify-center px-4 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
             >
-              <DatabaseIcon className="h-5 w-5 mr-2" />
+              <CircleStackIcon className="h-5 w-5 mr-2" />
               Initialize Data
             </a>
           </div>

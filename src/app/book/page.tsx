@@ -181,8 +181,8 @@ export default function BookService() {
     }
     return 1;
   });
-  const [selectedService, setSelectedService] = useState<any>(null);
-  const [selectedProvider, setSelectedProvider] = useState<any>(null);
+  const [selectedService, setSelectedService] = useState<{id: string, name: string, price: string, time: string, description: string} | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<{id: string, name: string, rating: number, price: string} | null>(null);
   const [formData, setFormData] = useState({
     customerName: '',
     customerPhone: '',
@@ -203,7 +203,7 @@ export default function BookService() {
       const category = serviceCategories[categoryId as keyof typeof serviceCategories];
       
       if (category && category.services[serviceName as keyof typeof category.services]) {
-        const serviceInfo = category.services[serviceName as keyof typeof category.services] as any;
+        const serviceInfo = category.services[serviceName as keyof typeof category.services] as {price: string, time: string, description: string};
         
         setSelectedService({
           name: serviceName,
@@ -266,7 +266,7 @@ export default function BookService() {
     }));
   };
 
-  const handleServiceSelect = (service: any) => {
+  const handleServiceSelect = (service: {id: string, name: string, price: string, time: string, description: string}) => {
     setSelectedService(service);
     setFormData(prev => ({
       ...prev,
@@ -275,7 +275,7 @@ export default function BookService() {
     setCurrentStep(2);
   };
 
-  const handleProviderSelect = (provider: any) => {
+  const handleProviderSelect = (provider: {id: string, name: string, rating: number, price: string}) => {
     setSelectedProvider(provider);
     setCurrentStep(3);
   };
@@ -330,7 +330,7 @@ export default function BookService() {
             </p>
           </div>
           <p className="text-sm text-gray-500">
-            You'll be redirected to the home page shortly...
+            You&apos;ll be redirected to the home page shortly...
           </p>
         </div>
       </div>
@@ -397,7 +397,7 @@ export default function BookService() {
                 Choose Your Service
               </h2>
               <p className="text-lg text-gray-600">
-                Select the service you need and we'll connect you with the best providers
+                Select the service you need and we&apos;ll connect you with the best providers
               </p>
             </div>
 
@@ -745,7 +745,7 @@ export default function BookService() {
 
                 <div className="text-center">
                   <p className="text-sm text-gray-500 leading-relaxed">
-                    We'll connect you with {selectedProvider.name} and send confirmation within 2 hours.
+                    We&apos;ll connect you with {selectedProvider.name} and send confirmation within 2 hours.
                   </p>
                 </div>
               </form>
