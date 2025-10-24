@@ -468,7 +468,12 @@ export default function BookService() {
                 {categoryId && getCategoryProviders(categoryId).map((provider) => (
                   <div
                     key={provider.id}
-                    onClick={() => handleProviderSelect(provider)}
+                    onClick={() => handleProviderSelect({
+                      id: provider.id,
+                      name: provider.name,
+                      rating: provider.rating,
+                      price: 'Contact for pricing'
+                    })}
                     className="border-2 border-gray-200 rounded-xl p-6 hover:border-blue-300 hover:shadow-lg transition-all duration-300 cursor-pointer group"
                   >
                     <div className="flex items-center mb-4">
