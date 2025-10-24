@@ -201,8 +201,8 @@ export default function BookService() {
         const serviceInfo = category.services[serviceName as keyof typeof category.services] as {price: string, time: string, description: string};
         
         setSelectedService({
+          id: categoryId,
           name: serviceName,
-          category: category,
           price: serviceInfo.price,
           time: serviceInfo.time,
           description: serviceInfo.description
