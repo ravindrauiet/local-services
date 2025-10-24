@@ -450,7 +450,7 @@ export default function BookService() {
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8">
                 <div className="flex items-center">
                   <div className={`bg-gradient-to-r ${serviceCategories[categoryId as keyof typeof serviceCategories]?.color || 'from-blue-500 to-purple-500'} w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
-                    {serviceCategories[categoryId as keyof typeof serviceCategories]?.icon && <serviceCategories[categoryId as keyof typeof serviceCategories].icon className="h-6 w-6 text-white" />}
+                    <div className="h-6 w-6 text-white">📋</div>
                   </div>
                   <div>
                     <h3 className="font-bold text-gray-900">{selectedService.name}</h3>
@@ -539,7 +539,7 @@ export default function BookService() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <div className={`bg-gradient-to-r ${serviceCategories[categoryId as keyof typeof serviceCategories]?.color || 'from-blue-500 to-purple-500'} w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
-                      {serviceCategories[categoryId as keyof typeof serviceCategories]?.icon && <serviceCategories[categoryId as keyof typeof serviceCategories].icon className="h-6 w-6 text-white" />}
+                      <div className="h-6 w-6 text-white">📋</div>
                     </div>
                     <div>
                       <h3 className="font-bold text-gray-900">{selectedService.name}</h3>
