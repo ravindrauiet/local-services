@@ -239,7 +239,12 @@ export default function BookService() {
       );
       const provider = allProviders.find(p => p.id === providerId);
       if (provider) {
-        setSelectedProvider(provider);
+        setSelectedProvider({
+          id: provider.id,
+          name: provider.name,
+          rating: provider.rating,
+          price: 'Contact for pricing'
+        });
         // If provider is pre-selected, go to step 3 (booking form)
         setCurrentStep(3);
       }
