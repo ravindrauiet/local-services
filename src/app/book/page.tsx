@@ -217,8 +217,8 @@ export default function BookService() {
         // Fallback: create a basic service object if not found
         if (category) {
           setSelectedService({
+            id: categoryId,
             name: serviceName,
-            category: category,
             price: 'Contact for pricing',
             time: 'Contact for timing',
             description: `${serviceName} service`
