@@ -434,7 +434,7 @@ export default function BookService() {
                     Select a Provider
                   </h2>
                   <p className="text-gray-600">
-                    Choose from our verified {selectedService.category.name.toLowerCase()} professionals
+                    Choose from our verified {serviceCategories[categoryId as keyof typeof serviceCategories]?.name.toLowerCase() || 'service'} professionals
                   </p>
                 </div>
                 <button
@@ -449,8 +449,8 @@ export default function BookService() {
               {/* Selected Service Summary */}
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8">
                 <div className="flex items-center">
-                  <div className={`bg-gradient-to-r ${selectedService.category.color} w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
-                    <selectedService.category.icon className="h-6 w-6 text-white" />
+                  <div className={`bg-gradient-to-r ${serviceCategories[categoryId as keyof typeof serviceCategories]?.color || 'from-blue-500 to-purple-500'} w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
+                    {serviceCategories[categoryId as keyof typeof serviceCategories]?.icon && <serviceCategories[categoryId as keyof typeof serviceCategories].icon className="h-6 w-6 text-white" />}
                   </div>
                   <div>
                     <h3 className="font-bold text-gray-900">{selectedService.name}</h3>
@@ -465,7 +465,7 @@ export default function BookService() {
 
               {/* Providers List */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {getCategoryProviders(selectedService.category.id).map((provider) => (
+                {getCategoryProviders(categoryId).map((provider) => (
                   <div
                     key={provider.id}
                     onClick={() => handleProviderSelect(provider)}
@@ -538,8 +538,8 @@ export default function BookService() {
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-8">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <div className={`bg-gradient-to-r ${selectedService.category.color} w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
-                      <selectedService.category.icon className="h-6 w-6 text-white" />
+                    <div className={`bg-gradient-to-r ${serviceCategories[categoryId as keyof typeof serviceCategories]?.color || 'from-blue-500 to-purple-500'} w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
+                      {serviceCategories[categoryId as keyof typeof serviceCategories]?.icon && <serviceCategories[categoryId as keyof typeof serviceCategories].icon className="h-6 w-6 text-white" />}
                     </div>
                     <div>
                       <h3 className="font-bold text-gray-900">{selectedService.name}</h3>
