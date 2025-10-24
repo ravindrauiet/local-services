@@ -83,7 +83,7 @@ export interface FirebaseNotification {
   priority: 'high' | 'medium' | 'low';
   createdAt: Timestamp;
   actionUrl?: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 // Admin Statistics

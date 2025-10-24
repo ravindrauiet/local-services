@@ -318,13 +318,13 @@ export default function BookService() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Booking Submitted!</h2>
           <p className="text-gray-600 mb-6 leading-relaxed">
-            Thank you for your booking request. We'll connect you with the best service providers in your area and get back to you within 2 hours.
+            Thank you for your booking request. We&apos;ll connect you with the best service providers in your area and get back to you within 2 hours.
           </p>
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 mb-6">
             <p className="text-sm text-gray-700">
               <strong>What happens next?</strong><br />
-              • We'll match you with verified providers<br />
-              • You'll receive quotes within 2 hours<br />
+              • We&apos;ll match you with verified providers<br />
+              • You&apos;ll receive quotes within 2 hours<br />
               • Choose your preferred provider<br />
               • Get your service completed
             </p>

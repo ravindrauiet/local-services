@@ -183,12 +183,12 @@ export default function ProviderRegistration() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Registration Submitted!</h2>
           <p className="text-gray-600 mb-6 leading-relaxed">
-            Thank you for registering as a service provider. We'll review your application and get back to you within 24-48 hours.
+            Thank you for registering as a service provider. We&apos;ll review your application and get back to you within 24-48 hours.
           </p>
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 mb-6">
             <p className="text-sm text-gray-700">
               <strong>What happens next?</strong><br />
-              • We'll review your application<br />
+              • We&apos;ll review your application<br />
               • Background verification process<br />
               • Account activation within 48 hours<br />
               • Start receiving bookings
@@ -567,7 +567,7 @@ export default function ProviderRegistration() {
                 Earn More
               </h3>
               <p className="text-gray-600 text-sm">
-                Increase your earnings with our platform's customer base and transparent pricing
+                Increase your earnings with our platform&apos;s customer base and transparent pricing
               </p>
             </div>
 

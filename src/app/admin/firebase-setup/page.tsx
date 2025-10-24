@@ -7,7 +7,7 @@ import {
   InformationCircleIcon,
   CogIcon,
   ShieldCheckIcon,
-  DatabaseIcon
+  CircleStackIcon
 } from '@heroicons/react/24/outline';
 
 export default function FirebaseSetupGuide() {
@@ -31,7 +31,7 @@ export default function FirebaseSetupGuide() {
       id: 2,
       title: 'Create Firestore Database',
       description: 'Set up Firestore database for your project',
-      icon: DatabaseIcon,
+      icon: CircleStackIcon,
       details: [
         'Go to Firebase Console → Firestore Database',
         'Click "Create database"',
@@ -206,7 +206,7 @@ export default function FirebaseSetupGuide() {
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-yellow-800">Troubleshooting</h3>
                 <div className="mt-2 text-sm text-yellow-700">
-                  <p>If you're still getting authentication errors:</p>
+                  <p>If you&apos;re still getting authentication errors:</p>
                   <ul className="list-disc list-inside mt-1 space-y-1">
                     <li>Make sure Email/Password is enabled in Firebase Authentication</li>
                     <li>Check that your Firebase project ID matches the configuration</li>

@@ -12,7 +12,6 @@ import {
 } from '@heroicons/react/24/outline';
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const { login, isLoading } = useAdminAuth();
   const [formData, setFormData] = useState({
     email: '',
@@ -47,7 +46,7 @@ export default function AdminLoginPage() {
       } else {
         setError('Invalid email or password');
       }
-    } catch (error) {
+    } catch {
       setError('An error occurred during login. Please try again.');
     }
   };
@@ -142,9 +141,9 @@ export default function AdminLoginPage() {
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                <button type="button" className="font-medium text-blue-600 hover:text-blue-500">
                   Forgot your password?
-                </a>
+                </button>
               </div>
             </div>
 

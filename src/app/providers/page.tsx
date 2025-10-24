@@ -6,9 +6,7 @@ import Footer from '@/components/Footer';
 import { 
   StarIcon, 
   MapPinIcon, 
-  PhoneIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
   ShieldCheckIcon,
   SparklesIcon,
   BoltIcon,
@@ -16,14 +14,9 @@ import {
   ScissorsIcon,
   CogIcon,
   HeartIcon,
-  PaintBrushIcon,
   ClockIcon,
-  UserGroupIcon,
-  ChatBubbleLeftRightIcon,
   CurrencyDollarIcon,
-  ArrowRightIcon,
-  CheckCircleIcon,
-  EyeIcon
+  CheckCircleIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
@@ -228,12 +221,11 @@ const serviceColors = {
 };
 
 export default function ProvidersPage() {
-  const [providers, setProviders] = useState(mockProviders);
+  const [providers] = useState(mockProviders);
   const [filteredProviders, setFilteredProviders] = useState(mockProviders);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedServiceType, setSelectedServiceType] = useState('All Providers');
   const [sortBy, setSortBy] = useState('rating');
-  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     let filtered = providers;

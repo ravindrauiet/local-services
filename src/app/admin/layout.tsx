@@ -15,16 +15,16 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
 
+  useEffect(() => {
+    if (!isLoading && !admin && pathname !== '/admin/login') {
+      router.push('/admin/login');
+    }
+  }, [admin, isLoading, router, pathname]);
+
   // Don't apply admin layout to login page
   if (pathname === '/admin/login') {
     return <>{children}</>;
   }
-
-  useEffect(() => {
-    if (!isLoading && !admin) {
-      router.push('/admin/login');
-    }
-  }, [admin, isLoading, router]);
 
   // Show loading or redirect for non-login pages
   if (isLoading) {

@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch real data from Firebase
     const providers = await FirebaseAdminService.getProviders({
-      status: status as any,
+      status: status as 'active' | 'inactive' | 'pending' | undefined,
       search: search || undefined,
       sortBy,
       sortOrder: sortOrder as 'asc' | 'desc'

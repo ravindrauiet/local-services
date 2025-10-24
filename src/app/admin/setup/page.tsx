@@ -27,7 +27,7 @@ export default function AdminSetupPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const initializeCollection = async (collectionName: string, initFunction: () => Promise<any>) => {
+  const initializeCollection = async (collectionName: string, initFunction: () => Promise<void>) => {
     try {
       await initFunction();
       setInitializationStatus(prev => ({ ...prev, [collectionName]: true }));

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Footer from '@/components/Footer';
 import { 
@@ -308,7 +308,7 @@ export default function HomePage() {
             {/* Badge */}
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-8">
               <FireIconSolid className="h-5 w-5 mr-2 text-orange-400" />
-              <span className="text-sm font-medium text-white">India's #1 Mithila Shilpi Platform</span>
+              <span className="text-sm font-medium text-white">India&apos;s #1 Mithila Shilpi Platform</span>
             </div>
             
             {/* Main Heading */}
@@ -939,7 +939,7 @@ export default function HomePage() {
                 </div>
                 
                 <p className="text-gray-700 leading-relaxed italic">
-                  "{testimonial.text}"
+                  &ldquo;{testimonial.text}&rdquo;
                 </p>
               </div>
             ))}
