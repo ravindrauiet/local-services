@@ -27,11 +27,15 @@ export default function AdminSetupPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const initializeCollection = async (collectionName: string, initFunction: () => Promise<void>) => {
+  const initializeCollection = async (collectionName: string, initFunction: () => Promise<{success: boolean, message: string}>) => {
     try {
-      await initFunction();
-      setInitializationStatus(prev => ({ ...prev, [collectionName]: true }));
-      return true;
+      const result = await initFunction();
+      if (result.success) {
+        setInitializationStatus(prev => ({ ...prev, [collectionName]: true }));
+        return true;
+      } else {
+        throw new Error(result.message);
+      }
     } catch (error) {
       console.error(`Error initializing ${collectionName}:`, error);
       setError(`Failed to initialize ${collectionName}`);

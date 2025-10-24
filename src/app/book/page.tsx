@@ -2,15 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
 import Footer from '@/components/Footer';
 import { 
   CalendarIcon, 
   ClockIcon, 
   MapPinIcon, 
   UserIcon, 
-  PhoneIcon,
-  EnvelopeIcon,
   CheckCircleIcon,
   SparklesIcon,
   BoltIcon,
@@ -18,14 +15,12 @@ import {
   ScissorsIcon,
   CogIcon,
   HeartIcon,
-  PaintBrushIcon,
   ShieldCheckIcon,
   StarIcon,
   CurrencyDollarIcon,
   ArrowRightIcon,
   ArrowLeftIcon,
   UserGroupIcon,
-  ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
@@ -266,14 +261,6 @@ export default function BookService() {
     }));
   };
 
-  const handleServiceSelect = (service: {id: string, name: string, price: string, time: string, description: string}) => {
-    setSelectedService(service);
-    setFormData(prev => ({
-      ...prev,
-      serviceType: service.name
-    }));
-    setCurrentStep(2);
-  };
 
   const handleProviderSelect = (provider: {id: string, name: string, rating: number, price: string}) => {
     setSelectedProvider(provider);
