@@ -108,7 +108,7 @@ const serviceTypes = [
 export default function ProviderRegistration() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedService, setSelectedService] = useState<{id: string, name: string, color: string, description: string, earnings: string, demand: string, features: string[]} | null>(null);
+  const [selectedService, setSelectedService] = useState<{id: string, name: string, icon: React.ComponentType<{className?: string}>, color: string, description: string, avgEarnings: string, demand: string} | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     businessName: '',
@@ -140,7 +140,7 @@ export default function ProviderRegistration() {
     }));
   };
 
-  const handleServiceSelect = (service: {id: string, name: string, color: string, description: string, earnings: string, demand: string, features: string[]}) => {
+  const handleServiceSelect = (service: {id: string, name: string, icon: React.ComponentType<{className?: string}>, color: string, description: string, avgEarnings: string, demand: string}) => {
     setSelectedService(service);
     setFormData(prev => ({
       ...prev,

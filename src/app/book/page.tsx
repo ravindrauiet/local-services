@@ -552,7 +552,7 @@ export default function BookService() {
                       <div className="flex items-center mt-1">
                         <StarIconSolid className="h-4 w-4 text-yellow-400 mr-1" />
                         <span className="text-sm font-semibold text-gray-900">{selectedProvider.rating}</span>
-                        <span className="text-sm text-gray-500 ml-2">({selectedProvider.reviews} reviews)</span>
+                        <span className="text-sm text-gray-500 ml-2">(reviews)</span>
                       </div>
                     </div>
                   </div>
