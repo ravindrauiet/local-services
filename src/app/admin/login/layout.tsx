@@ -1,6 +1,6 @@
 'use client';
 
-import { AdminAuthProvider } from '@/contexts/AdminAuthContext';
+import { SimpleAdminAuthProvider } from '@/contexts/SimpleAdminAuthContext';
 
 export default function AdminLoginLayout({
   children,
@@ -8,8 +8,8 @@ export default function AdminLoginLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AdminAuthProvider>
+    <SimpleAdminAuthProvider>
       {children}
-    </AdminAuthProvider>
+    </SimpleAdminAuthProvider>
   );
 }

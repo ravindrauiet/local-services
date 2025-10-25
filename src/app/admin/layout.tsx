@@ -1,7 +1,7 @@
 'use client';
 
-import { AdminAuthProvider } from '@/contexts/AdminAuthContext';
-import { useAdminAuth } from '@/contexts/AdminAuthContext';
+import { SimpleAdminAuthProvider } from '@/contexts/SimpleAdminAuthContext';
+import { useSimpleAdminAuth } from '@/contexts/SimpleAdminAuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { 
@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
-  const { admin, isLoading, logout } = useAdminAuth();
+  const { admin, isLoading, logout } = useSimpleAdminAuth();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -91,8 +91,8 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AdminAuthProvider>
+    <SimpleAdminAuthProvider>
       <AdminLayoutContent>{children}</AdminLayoutContent>
-    </AdminAuthProvider>
+    </SimpleAdminAuthProvider>
   );
 }

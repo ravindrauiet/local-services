@@ -31,13 +31,26 @@ export function SimpleAdminAuthProvider({ children }: { children: ReactNode }) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Check credentials
-      if (email === 'admin@localservices.com' && password === 'admin123') {
+      if (email === 'admin@mithilashilpi.com' && password === 'admin123') {
         const adminData = {
           id: '1',
-          email: 'admin@localservices.com',
+          email: 'admin@mithilashilpi.com',
           name: 'System Administrator',
           role: 'super-admin' as const,
           permissions: ['*']
+        };
+        setAdmin(adminData);
+        return true;
+      }
+      
+      // Check moderator credentials
+      if (email === 'moderator@mithilashilpi.com' && password === 'mod123') {
+        const adminData = {
+          id: '2',
+          email: 'moderator@mithilashilpi.com',
+          name: 'Moderator',
+          role: 'admin' as const,
+          permissions: ['read', 'update']
         };
         setAdmin(adminData);
         return true;

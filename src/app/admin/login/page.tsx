@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useAdminAuth } from '@/contexts/AdminAuthContext';
+import { useSimpleAdminAuth } from '@/contexts/SimpleAdminAuthContext';
 import { 
   EnvelopeIcon, 
   LockClosedIcon,
@@ -12,7 +12,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 export default function AdminLoginPage() {
-  const { login, isLoading } = useAdminAuth();
+  const { login, isLoading } = useSimpleAdminAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
