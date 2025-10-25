@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Footer from '@/components/Footer';
 import { 
@@ -157,7 +157,7 @@ const timeSlots = [
   '05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM'
 ];
 
-export default function BookService() {
+function BookServiceContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const providerId = searchParams.get('provider');
@@ -817,5 +817,20 @@ export default function BookService() {
       
       <Footer />
     </div>
+  );
+}
+
+export default function BookService() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading booking form...</p>
+        </div>
+      </div>
+    }>
+      <BookServiceContent />
+    </Suspense>
   );
 }
