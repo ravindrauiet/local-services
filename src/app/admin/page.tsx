@@ -1,8 +1,8 @@
 'use client';
 
-import { useAdminAuth } from '@/contexts/AdminAuthContext';
+import { useSimpleAdminAuth } from '@/contexts/SimpleAdminAuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   ShieldCheckIcon,
   ArrowRightOnRectangleIcon,
@@ -13,14 +13,50 @@ import {
 } from '@heroicons/react/24/outline';
 
 export default function AdminPage() {
-  const { admin, isLoading, logout } = useAdminAuth();
+  const { admin, isLoading, logout } = useSimpleAdminAuth();
   const router = useRouter();
+  const [stats, setStats] = useState<{
+    totalUsers: number;
+    totalProviders: number;
+    totalBookings: number;
+    totalRevenue: number;
+  } | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [statsError, setStatsError] = useState('');
 
   useEffect(() => {
     if (!isLoading && !admin) {
       router.push('/admin/login');
     }
   }, [admin, isLoading, router]);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (!admin) return;
+      setStatsLoading(true);
+      setStatsError('');
+      try {
+        const res = await fetch('/api/admin/stats');
+        if (!res.ok) throw new Error('Failed to load stats');
+        const json = await res.json();
+        if (json?.success) {
+          setStats({
+            totalUsers: json.data.totalUsers,
+            totalProviders: json.data.totalProviders,
+            totalBookings: json.data.totalBookings,
+            totalRevenue: json.data.totalRevenue,
+          });
+        } else {
+          throw new Error(json?.error || 'Failed to load stats');
+        }
+      } catch (e: any) {
+        setStatsError(e?.message || 'Failed to load stats');
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+    fetchStats();
+  }, [admin]);
 
   if (isLoading) {
     return (
@@ -39,40 +75,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Admin Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <ShieldCheckIcon className="h-8 w-8 text-blue-600 mr-3" />
-              <div>
-                <h1 className="text-xl font-semibold text-gray-900">Admin Panel</h1>
-                <p className="text-sm text-gray-500">Local Services Management</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <UserIcon className="h-5 w-5 text-gray-400" />
-                <div className="text-sm">
-                  <p className="font-medium text-gray-900">{admin.name}</p>
-                  <p className="text-gray-500">{admin.role}</p>
-                </div>
-              </div>
-              
-              <button
-                onClick={logout}
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors"
-              >
-                <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                <span className="text-sm">Logout</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
+      {/* Main Content (header provided by admin layout) */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome, {admin.name}!</h2>
@@ -88,7 +91,7 @@ export default function AdminPage() {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total Users</p>
-                <p className="text-2xl font-semibold text-gray-900">1,247</p>
+                <p className="text-2xl font-semibold text-gray-900">{statsLoading ? '—' : (stats?.totalUsers ?? 0)}</p>
               </div>
             </div>
           </div>
@@ -100,7 +103,7 @@ export default function AdminPage() {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Service Providers</p>
-                <p className="text-2xl font-semibold text-gray-900">89</p>
+                <p className="text-2xl font-semibold text-gray-900">{statsLoading ? '—' : (stats?.totalProviders ?? 0)}</p>
               </div>
             </div>
           </div>
@@ -112,7 +115,7 @@ export default function AdminPage() {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total Bookings</p>
-                <p className="text-2xl font-semibold text-gray-900">456</p>
+                <p className="text-2xl font-semibold text-gray-900">{statsLoading ? '—' : (stats?.totalBookings ?? 0)}</p>
               </div>
             </div>
           </div>
@@ -124,25 +127,40 @@ export default function AdminPage() {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Revenue</p>
-                <p className="text-2xl font-semibold text-gray-900">₹45,600</p>
+                <p className="text-2xl font-semibold text-gray-900">{statsLoading ? '—' : `₹${(stats?.totalRevenue ?? 0).toLocaleString()}`}</p>
               </div>
             </div>
           </div>
         </div>
 
+        {statsError && (
+          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            {statsError}
+          </div>
+        )}
+
         {/* Quick Actions */}
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left">
+            <button
+              onClick={() => router.push('/admin/providers')}
+              className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
+            >
               <h4 className="font-medium text-gray-900">Manage Providers</h4>
               <p className="text-sm text-gray-500">Approve or manage service providers</p>
             </button>
-            <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left">
+            <button
+              onClick={() => router.push('/admin/bookings')}
+              className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
+            >
               <h4 className="font-medium text-gray-900">View Bookings</h4>
               <p className="text-sm text-gray-500">Track and manage all bookings</p>
             </button>
-            <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left">
+            <button
+              onClick={() => router.push('/admin/users')}
+              className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
+            >
               <h4 className="font-medium text-gray-900">User Management</h4>
               <p className="text-sm text-gray-500">Manage users and their accounts</p>
             </button>

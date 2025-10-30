@@ -89,13 +89,23 @@ const Navigation = () => {
 
           {/* Right side buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link
-              href="/provider/register"
-              className="flex items-center px-4 py-2 text-gray-700 hover:text-blue-600 transition-colors duration-300"
-            >
-              <Cog6ToothIcon className="h-5 w-5 mr-2" />
-              Become a Provider
-            </Link>
+            {profile?.role === 'provider' ? (
+              <Link
+                href="/provider/dashboard"
+                className="flex items-center px-4 py-2 text-gray-700 hover:text-blue-600 transition-colors duration-300"
+              >
+                <Cog6ToothIcon className="h-5 w-5 mr-2" />
+                Provider Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/provider/register"
+                className="flex items-center px-4 py-2 text-gray-700 hover:text-blue-600 transition-colors duration-300"
+              >
+                <Cog6ToothIcon className="h-5 w-5 mr-2" />
+                Become a Provider
+              </Link>
+            )}
             {isLoading ? null : profile ? (
               <div className="relative" ref={profileMenuRef}>
                 <button
@@ -157,14 +167,25 @@ const Navigation = () => {
                 </Link>
               ))}
               <div className="border-t border-gray-100 pt-3 mt-3">
-                <Link
-                  href="/provider/register"
-                  className="flex items-center px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-300"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <Cog6ToothIcon className="h-5 w-5 mr-2" />
-                  Become a Provider
-                </Link>
+                {profile?.role === 'provider' ? (
+                  <Link
+                    href="/provider/dashboard"
+                    className="flex items-center px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-300"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Cog6ToothIcon className="h-5 w-5 mr-2" />
+                    Provider Dashboard
+                  </Link>
+                ) : (
+                  <Link
+                    href="/provider/register"
+                    className="flex items-center px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-300"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Cog6ToothIcon className="h-5 w-5 mr-2" />
+                    Become a Provider
+                  </Link>
+                )}
                 {profile ? (
                   <>
                     <Link

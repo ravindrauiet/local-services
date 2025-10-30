@@ -132,12 +132,28 @@ export class FirebaseAuthFallbackService {
         createdAt: serverTimestamp(),
         lastLogin: serverTimestamp()
       };
+      const customAdmin = {
+        id: 'admin2',
+        email: 'ravindra@gmail.com',
+        password: '123456',
+        name: 'Ravindra',
+        role: 'admin',
+        permissions: ['read', 'update', 'approve'],
+        createdAt: serverTimestamp(),
+        lastLogin: serverTimestamp()
+      };
 
       const adminDoc = await getDoc(doc(db, 'admins', defaultAdmin.email));
       
       if (!adminDoc.exists()) {
         await setDoc(doc(db, 'admins', defaultAdmin.email), defaultAdmin);
         console.log('Default admin created successfully');
+      }
+
+      const customDoc = await getDoc(doc(db, 'admins', customAdmin.email));
+      if (!customDoc.exists()) {
+        await setDoc(doc(db, 'admins', customAdmin.email), customAdmin);
+        console.log('Custom admin (ravindra) created successfully');
       }
     } catch (error) {
       console.error('Error initializing default admin:', error);

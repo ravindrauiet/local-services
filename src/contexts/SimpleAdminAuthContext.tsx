@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 interface AdminUser {
   id: string;
@@ -21,7 +21,21 @@ const SimpleAdminAuthContext = createContext<SimpleAdminAuthContextType | undefi
 
 export function SimpleAdminAuthProvider({ children }: { children: ReactNode }) {
   const [admin, setAdmin] = useState<AdminUser | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Initialize from localStorage (persisted session)
+  useEffect(() => {
+    try {
+      const stored = typeof window !== 'undefined' ? localStorage.getItem('simple_admin_user') : null;
+      if (stored) {
+        setAdmin(JSON.parse(stored));
+      }
+    } catch (e) {
+      // ignore
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
@@ -40,6 +54,9 @@ export function SimpleAdminAuthProvider({ children }: { children: ReactNode }) {
           permissions: ['*']
         };
         setAdmin(adminData);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('simple_admin_user', JSON.stringify(adminData));
+        }
         return true;
       }
       
@@ -53,6 +70,25 @@ export function SimpleAdminAuthProvider({ children }: { children: ReactNode }) {
           permissions: ['read', 'update']
         };
         setAdmin(adminData);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('simple_admin_user', JSON.stringify(adminData));
+        }
+        return true;
+      }
+
+      // Custom admin (requested)
+      if (email === 'ravindra@gmail.com' && password === '123456') {
+        const adminData = {
+          id: '3',
+          email: 'ravindra@gmail.com',
+          name: 'Ravindra',
+          role: 'admin' as const,
+          permissions: ['read', 'update', 'approve']
+        };
+        setAdmin(adminData);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('simple_admin_user', JSON.stringify(adminData));
+        }
         return true;
       }
       
@@ -67,6 +103,9 @@ export function SimpleAdminAuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     setAdmin(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('simple_admin_user');
+    }
   };
 
   const value = {

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { FirebaseAdminService } from '@/lib/firebase-admin';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -55,6 +57,17 @@ export async function PUT(request: NextRequest) {
         isApproved: true,
         isActive: true
       });
+      // Also promote linked user to provider role (if ownerId present)
+      try {
+        const providerSnap = await getDoc(doc(db, 'providers', providerId));
+        const data = providerSnap.data() as any;
+        const ownerId = data?.ownerId;
+        if (ownerId) {
+          await updateDoc(doc(db, 'users', ownerId), { role: 'provider' });
+        }
+      } catch (e) {
+        console.error('Failed to update linked user role:', e);
+      }
       message = 'Provider approved successfully';
     } else if (action === 'toggleStatus') {
       // First get current status

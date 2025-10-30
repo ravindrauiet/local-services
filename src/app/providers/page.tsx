@@ -20,177 +20,9 @@ import {
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
-// Enhanced provider data with business information
-const mockProviders = [
-  {
-    id: '1',
-    name: 'Rajesh Kumar',
-    businessName: 'Rajesh Electrical Services',
-    serviceType: 'Electrician',
-    address: 'Sector 15, Noida',
-    phone: '+91 98765 43210',
-    email: 'rajesh@electricalservices.com',
-    rating: 4.8,
-    totalReviews: 127,
-    description: 'Professional electrician with 10+ years of experience. Specializes in home wiring, repairs, and installations. Available 24/7 for emergency services.',
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
-    businessPhoto: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=300&fit=crop',
-    isApproved: true,
-    experience: '10+ years',
-    responseTime: '1 hour',
-    price: '₹500 - ₹2,000',
-    verified: true,
-    specialties: ['Home Wiring', 'Emergency Repairs', 'Installations'],
-    languages: ['Hindi', 'English'],
-    workingHours: '9:00 AM - 8:00 PM (Mon-Sat)',
-    completedJobs: 450,
-    joinDate: '2022-01-15',
-    businessType: 'Individual Professional',
-    licenseNumber: 'ELC-UP-2022-001',
-    insurance: true,
-    warranty: '6 months'
-  },
-  {
-    id: '2',
-    name: 'Amit Sharma',
-    businessName: 'Sharma Plumbing Works',
-    serviceType: 'Plumber',
-    address: 'Sector 18, Noida',
-    phone: '+91 98765 43211',
-    email: 'amit@sharmaplumbing.com',
-    rating: 4.6,
-    totalReviews: 89,
-    description: 'Expert plumber offering 24/7 emergency services. All types of plumbing repairs and installations with quality guarantee.',
-    photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face',
-    businessPhoto: 'https://images.unsplash.com/photo-1581578731548-c6a0c3f2f6c5?w=400&h=300&fit=crop',
-    isApproved: true,
-    experience: '8+ years',
-    responseTime: '2 hours',
-    price: '₹300 - ₹1,500',
-    verified: true,
-    specialties: ['Emergency Repairs', 'Installations', 'Maintenance'],
-    languages: ['Hindi', 'English', 'Punjabi'],
-    workingHours: '8:00 AM - 7:00 PM (Mon-Sat)',
-    completedJobs: 320,
-    joinDate: '2022-03-20',
-    businessType: 'Small Business',
-    licenseNumber: 'PLB-UP-2022-002',
-    insurance: true,
-    warranty: '3 months'
-  },
-  {
-    id: '3',
-    name: 'Priya Singh',
-    businessName: 'Priya Wedding Services',
-    serviceType: 'Wedding Services',
-    address: 'Sector 22, Noida',
-    phone: '+91 98765 43212',
-    email: 'priya@weddingservices.com',
-    rating: 4.9,
-    totalReviews: 156,
-    description: 'Complete wedding services including pandit booking, samagri, decorations, and event management. With over 12 years of experience.',
-    photo: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face',
-    businessPhoto: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop',
-    isApproved: true,
-    experience: '12+ years',
-    responseTime: '4 hours',
-    price: '₹15,000 - ₹50,000',
-    verified: true,
-    specialties: ['Wedding Planning', 'Decorations', 'Event Management'],
-    languages: ['Hindi', 'English', 'Punjabi'],
-    workingHours: '9:00 AM - 8:00 PM (Mon-Sat)',
-    completedJobs: 500,
-    joinDate: '2021-11-10',
-    businessType: 'Event Management Company',
-    licenseNumber: 'WED-UP-2021-001',
-    insurance: true,
-    warranty: 'Event completion'
-  },
-  {
-    id: '4',
-    name: 'Vikram Tailor',
-    businessName: 'Vikram Tailoring House',
-    serviceType: 'Cloth Shop & Tailor',
-    address: 'Sector 12, Noida',
-    phone: '+91 98765 43213',
-    email: 'vikram@tailoringhouse.com',
-    rating: 4.7,
-    totalReviews: 203,
-    description: 'Professional tailoring services for men and women. Custom suits, alterations, and ready-made clothing with premium quality.',
-    photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face',
-    businessPhoto: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=400&h=300&fit=crop',
-    isApproved: true,
-    experience: '15+ years',
-    responseTime: '1 day',
-    price: '₹200 - ₹5,000',
-    verified: true,
-    specialties: ['Custom Suits', 'Alterations', 'Ready-made'],
-    languages: ['Hindi', 'English'],
-    workingHours: '10:00 AM - 8:00 PM (Mon-Sat)',
-    completedJobs: 1200,
-    joinDate: '2021-08-05',
-    businessType: 'Retail Shop',
-    licenseNumber: 'TAI-UP-2021-003',
-    insurance: false,
-    warranty: '1 month'
-  },
-  {
-    id: '5',
-    name: 'Rohit AC Services',
-    businessName: 'Cool Air Solutions',
-    serviceType: 'RO & AC Services',
-    address: 'Sector 25, Noida',
-    phone: '+91 98765 43214',
-    email: 'rohit@coolairsolutions.com',
-    rating: 4.5,
-    totalReviews: 78,
-    description: 'AC repair, maintenance, and installation services. Also provides RO water purifier services with genuine parts guarantee.',
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
-    businessPhoto: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop',
-    isApproved: true,
-    experience: '6+ years',
-    responseTime: '3 hours',
-    price: '₹800 - ₹3,000',
-    verified: true,
-    specialties: ['AC Repair', 'RO Services', 'Maintenance'],
-    languages: ['Hindi', 'English'],
-    workingHours: '8:00 AM - 7:00 PM (Mon-Sat)',
-    completedJobs: 280,
-    joinDate: '2022-06-12',
-    businessType: 'Service Center',
-    licenseNumber: 'ACR-UP-2022-004',
-    insurance: true,
-    warranty: '1 year'
-  },
-  {
-    id: '6',
-    name: 'Beauty Palace',
-    businessName: 'Beauty Palace Salon',
-    serviceType: 'Beauty & Wellness',
-    address: 'Sector 16, Noida',
-    phone: '+91 98765 43215',
-    email: 'info@beautypalace.com',
-    rating: 4.8,
-    totalReviews: 134,
-    description: 'Full-service beauty salon offering haircuts, styling, facials, and other beauty treatments with modern equipment.',
-    photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face',
-    businessPhoto: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop',
-    isApproved: true,
-    experience: '9+ years',
-    responseTime: '2 hours',
-    price: '₹500 - ₹2,500',
-    verified: true,
-    specialties: ['Hair Styling', 'Facials', 'Beauty Treatments'],
-    languages: ['Hindi', 'English'],
-    workingHours: '9:00 AM - 8:00 PM (Mon-Sat)',
-    completedJobs: 890,
-    joinDate: '2021-12-01',
-    businessType: 'Beauty Salon',
-    licenseNumber: 'BEA-UP-2021-005',
-    insurance: true,
-    warranty: 'Service satisfaction'
-  }
-];
+// Load real providers from Firestore (approved and active)
+import { db } from '@/lib/firebase';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 
 const serviceTypes = [
   'All Providers',
@@ -221,11 +53,31 @@ const serviceColors = {
 };
 
 export default function ProvidersPage() {
-  const [providers] = useState(mockProviders);
-  const [filteredProviders, setFilteredProviders] = useState(mockProviders);
+  const [providers, setProviders] = useState<any[]>([]);
+  const [filteredProviders, setFilteredProviders] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedServiceType, setSelectedServiceType] = useState('All Providers');
   const [sortBy, setSortBy] = useState('rating');
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const q = query(
+          collection(db, 'providers'),
+          where('isApproved', '==', true),
+          where('isActive', '==', true)
+        );
+        const snap = await getDocs(q);
+        const list: any[] = [];
+        snap.forEach(docSnap => list.push({ id: docSnap.id, ...docSnap.data() }));
+        setProviders(list);
+        setFilteredProviders(list);
+      } catch (e) {
+        console.error('Failed to load providers', e);
+      }
+    };
+    load();
+  }, []);
 
   useEffect(() => {
     let filtered = providers;
@@ -247,17 +99,17 @@ export default function ProvidersPage() {
       );
     }
 
-    // Sort providers
+    // Sort providers (fallbacks for missing fields)
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'rating':
-          return b.rating - a.rating;
+          return (b.rating || 0) - (a.rating || 0);
         case 'reviews':
-          return b.totalReviews - a.totalReviews;
+          return (b.totalReviews || 0) - (a.totalReviews || 0);
         case 'experience':
           return parseInt(b.experience) - parseInt(a.experience);
         case 'jobs':
-          return b.completedJobs - a.completedJobs;
+          return (b.completedJobs || 0) - (a.completedJobs || 0);
         case 'name':
           return a.name.localeCompare(b.name);
         default:
