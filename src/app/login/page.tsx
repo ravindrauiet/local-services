@@ -251,10 +251,10 @@ export default function LoginPage() {
                 <p className="text-sm text-gray-600">
                   Don&apos;t have an account?{' '}
                   <Link 
-                    href={loginType === 'provider' ? '/provider/register' : '/register'} 
+                    href={loginType === 'provider' ? '/provider/register' : '/signup'} 
                     className="font-medium text-blue-600 hover:text-blue-700"
                   >
-                    Sign up here
+                    {loginType === 'provider' ? 'Register as provider' : 'Create customer account'}
                   </Link>
                 </p>
               </div>

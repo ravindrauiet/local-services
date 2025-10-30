@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -13,10 +13,33 @@ import {
   SparklesIcon,
   PhoneIcon
 } from '@heroicons/react/24/outline';
+import { useUserAuth } from '@/contexts/UserAuthContext';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const { profile, isLoading, logout } = useUserAuth();
+  const profileMenuRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
+
+  useEffect(() => {
+    // Close profile menu on outside click or Escape
+    const onClick = (e: MouseEvent) => {
+      if (!isProfileMenuOpen) return;
+      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target as Node)) {
+        setIsProfileMenuOpen(false);
+      }
+    };
+    const onEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsProfileMenuOpen(false);
+    };
+    window.addEventListener('click', onClick);
+    window.addEventListener('keydown', onEsc);
+    return () => {
+      window.removeEventListener('click', onClick);
+      window.removeEventListener('keydown', onEsc);
+    };
+  }, [isProfileMenuOpen]);
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -73,12 +96,31 @@ const Navigation = () => {
               <Cog6ToothIcon className="h-5 w-5 mr-2" />
               Become a Provider
             </Link>
-            <Link
-              href="/login"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
-            >
-              Login
-            </Link>
+            {isLoading ? null : profile ? (
+              <div className="relative" ref={profileMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsProfileMenuOpen(v => !v)}
+                  className="flex items-center px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-800"
+                >
+                  <UserIcon className="h-5 w-5 mr-2 text-blue-600" />
+                  <span className="font-semibold">{profile.name}</span>
+                </button>
+                {isProfileMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-lg shadow-lg">
+                    <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profile</Link>
+                    <button onClick={logout} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Logout</button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+              >
+                Login
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -123,13 +165,31 @@ const Navigation = () => {
                   <Cog6ToothIcon className="h-5 w-5 mr-2" />
                   Become a Provider
                 </Link>
-                <Link
-                  href="/login"
-                  className="block mx-4 mt-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-3 rounded-lg font-semibold text-center hover:from-blue-700 hover:to-purple-700 transition-all duration-300"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Login
-                </Link>
+                {profile ? (
+                  <>
+                    <Link
+                      href="/profile"
+                      className="block mx-4 mt-3 text-gray-700 px-4 py-3 rounded-lg font-semibold text-center hover:bg-blue-50 transition-all duration-300"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {profile.name}
+                    </Link>
+                    <button
+                      onClick={() => { logout(); setIsOpen(false); }}
+                      className="block w-full mx-4 mt-2 bg-gray-100 text-gray-800 px-4 py-3 rounded-lg font-semibold text-center hover:bg-gray-200 transition-all duration-300"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="block mx-4 mt-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-3 rounded-lg font-semibold text-center hover:from-blue-700 hover:to-purple-700 transition-all duration-300"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Login
+                  </Link>
+                )}
               </div>
             </div>
           </div>

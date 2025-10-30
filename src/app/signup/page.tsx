@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
 import { 
   EnvelopeIcon, 
   LockClosedIcon,
@@ -58,15 +61,46 @@ export default function CustomerSignupPage() {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // In a real app, you would send this data to your backend
-      console.log('Customer signup data:', formData);
-      
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      if (userCredential.user) {
+        // Update display name
+        await updateProfile(userCredential.user, { displayName: formData.name });
+
+        // Create user profile in Firestore
+        await setDoc(doc(db, 'users', userCredential.user.uid), {
+          id: userCredential.user.uid,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          role: 'user',
+          createdAt: serverTimestamp()
+        });
+      }
+
       setSuccess(true);
-    } catch (error) {
-      setError('An error occurred during signup. Please try again.');
+    } catch (err: any) {
+      const code = err?.code as string | undefined;
+      switch (code) {
+        case 'auth/email-already-in-use':
+          setError('An account with this email already exists.');
+          break;
+        case 'auth/invalid-email':
+          setError('Please enter a valid email address.');
+          break;
+        case 'auth/weak-password':
+          setError('Password is too weak. Please use a stronger password.');
+          break;
+        case 'auth/network-request-failed':
+          setError('Network error. Please check your connection and try again.');
+          break;
+        default:
+          setError('An error occurred during signup. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }

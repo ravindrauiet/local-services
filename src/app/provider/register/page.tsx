@@ -29,6 +29,9 @@ import {
   GlobeAltIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
+import { db, storage, auth } from '@/lib/firebase';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 const serviceTypes = [
   {
@@ -153,19 +156,50 @@ export default function ProviderRegistration() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    try {
-      // Here you would typically upload files to Firebase Storage
-      // and save the provider data to Firestore
-      // For now, we'll just simulate the submission
-      
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+  try {
+      // Upload optional files to Storage
+      let photoUrl: string | undefined;
+      let logoUrl: string | undefined;
+
+      if (formData.photo) {
+        const photoRef = ref(storage, `providers/photos/${Date.now()}_${formData.photo.name}`);
+        await uploadBytes(photoRef, formData.photo);
+        photoUrl = await getDownloadURL(photoRef);
+      }
+      if (formData.logo) {
+        const logoRef = ref(storage, `providers/logos/${Date.now()}_${formData.logo.name}`);
+        await uploadBytes(logoRef, formData.logo);
+        logoUrl = await getDownloadURL(logoRef);
+      }
+
+      // Save provider document to Firestore
+      await addDoc(collection(db, 'providers'), {
+        name: formData.name,
+        businessName: formData.businessName || null,
+        serviceType: formData.serviceType,
+        address: formData.address,
+        phone: formData.phone,
+        email: formData.email,
+        description: formData.description,
+        experience: formData.experience || null,
+        rating: 0,
+        totalReviews: 0,
+        totalBookings: 0,
+        isApproved: false,
+        isActive: false,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        photo: photoUrl || null,
+        logo: logoUrl || null,
+        ownerId: auth.currentUser?.uid || null,
+      });
+
       setIsSubmitted(true);
       
       // Redirect to success page or show success message
       setTimeout(() => {
         router.push('/');
-      }, 3000);
+      }, 2500);
       
     } catch (error) {
       console.error('Error submitting form:', error);
