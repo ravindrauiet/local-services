@@ -34,13 +34,13 @@ export function UserAuthProvider({ children }: { children: ReactNode }) {
         try {
           const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
           if (userDoc.exists()) {
-            const data = userDoc.data() as any;
+            const data = userDoc.data();
             setProfile({
               id: firebaseUser.uid,
-              name: data.name || firebaseUser.displayName || 'User',
-              email: data.email || firebaseUser.email || '',
-              phone: data.phone || '',
-              role: data.role || 'user',
+              name: (data.name as string | undefined) || firebaseUser.displayName || 'User',
+              email: (data.email as string | undefined) || firebaseUser.email || '',
+              phone: (data.phone as string | undefined) || '',
+              role: (data.role as 'user' | 'provider' | 'admin' | undefined) || 'user',
             });
           } else {
             // Fallback to auth data

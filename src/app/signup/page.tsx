@@ -83,8 +83,9 @@ export default function CustomerSignupPage() {
       }
 
       setSuccess(true);
-    } catch (err: any) {
-      const code = err?.code as string | undefined;
+    } catch (err: unknown) {
+      const error = err as { code?: string };
+      const code = error.code;
       switch (code) {
         case 'auth/email-already-in-use':
           setError('An account with this email already exists.');

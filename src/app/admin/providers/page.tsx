@@ -13,7 +13,7 @@ interface Provider {
   phone: string;
   isApproved: boolean;
   isActive: boolean;
-  createdAt?: any;
+  createdAt?: Date | { seconds: number; nanoseconds: number } | string | number;
 }
 
 export default function AdminProvidersPage() {
@@ -39,8 +39,9 @@ export default function AdminProvidersPage() {
         const json = await res.json();
         if (!json.success) throw new Error(json.error || 'Failed to load providers');
         setProviders(json.data || []);
-      } catch (e: any) {
-        setError(e?.message || 'Failed to load providers');
+      } catch (e: unknown) {
+        const error = e instanceof Error ? e : new Error('Failed to load providers');
+        setError(error.message);
       } finally {
         setLoading(false);
       }
@@ -59,8 +60,9 @@ export default function AdminProvidersPage() {
       const json = await res.json();
       if (!res.ok || !json.success) throw new Error(json.error || 'Approve failed');
       setProviders(prev => prev.map(p => p.id === providerId ? { ...p, isApproved: true, isActive: true } : p));
-    } catch (e: any) {
-      alert(e?.message || 'Failed to approve');
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e : new Error('Failed to approve');
+      alert(error.message);
     } finally {
       setRowBusy(prev => ({ ...prev, [providerId]: false }));
     }
@@ -77,8 +79,9 @@ export default function AdminProvidersPage() {
       const json = await res.json();
       if (!res.ok || !json.success) throw new Error(json.error || 'Update failed');
       setProviders(prev => prev.map(p => p.id === providerId ? { ...p, isActive: !p.isActive } : p));
-    } catch (e: any) {
-      alert(e?.message || 'Failed to update status');
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e : new Error('Failed to update status');
+      alert(error.message);
     } finally {
       setRowBusy(prev => ({ ...prev, [providerId]: false }));
     }

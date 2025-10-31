@@ -52,9 +52,33 @@ const serviceColors = {
   'Beauty & Wellness': 'from-rose-500 to-pink-500'
 };
 
+interface Provider {
+  id: string;
+  name: string;
+  businessName?: string;
+  serviceType: string;
+  address: string;
+  phone: string;
+  email: string;
+  description: string;
+  experience?: string;
+  rating: number;
+  totalReviews: number;
+  specialties: string[];
+  businessPhoto?: string;
+  photo?: string;
+  responseTime?: string;
+  businessType?: string;
+  completedJobs?: number;
+  price?: string;
+  verified?: boolean;
+  isApproved: boolean;
+  isActive: boolean;
+}
+
 export default function ProvidersPage() {
-  const [providers, setProviders] = useState<any[]>([]);
-  const [filteredProviders, setFilteredProviders] = useState<any[]>([]);
+  const [providers, setProviders] = useState<Provider[]>([]);
+  const [filteredProviders, setFilteredProviders] = useState<Provider[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedServiceType, setSelectedServiceType] = useState('All Providers');
   const [sortBy, setSortBy] = useState('rating');
@@ -68,8 +92,19 @@ export default function ProvidersPage() {
           where('isActive', '==', true)
         );
         const snap = await getDocs(q);
-        const list: any[] = [];
-        snap.forEach(docSnap => list.push({ id: docSnap.id, ...docSnap.data() }));
+        const list: Provider[] = [];
+        snap.forEach(docSnap => {
+          const data = docSnap.data();
+          list.push({ 
+            id: docSnap.id, 
+            ...data,
+            rating: data.rating || 0,
+            totalReviews: data.totalReviews || 0,
+            specialties: data.specialties || [],
+            isApproved: data.isApproved || false,
+            isActive: data.isActive || false,
+          } as Provider);
+        });
         setProviders(list);
         setFilteredProviders(list);
       } catch (e) {
@@ -91,7 +126,7 @@ export default function ProvidersPage() {
     if (searchTerm) {
       filtered = filtered.filter(provider => 
         provider.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        provider.businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (provider.businessName && provider.businessName.toLowerCase().includes(searchTerm.toLowerCase())) ||
         provider.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
         provider.specialties.some(specialty => 
           specialty.toLowerCase().includes(searchTerm.toLowerCase())
@@ -107,7 +142,7 @@ export default function ProvidersPage() {
         case 'reviews':
           return (b.totalReviews || 0) - (a.totalReviews || 0);
         case 'experience':
-          return parseInt(b.experience) - parseInt(a.experience);
+          return parseInt(b.experience || '0') - parseInt(a.experience || '0');
         case 'jobs':
           return (b.completedJobs || 0) - (a.completedJobs || 0);
         case 'name':

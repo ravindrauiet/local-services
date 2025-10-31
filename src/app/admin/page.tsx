@@ -49,8 +49,9 @@ export default function AdminPage() {
         } else {
           throw new Error(json?.error || 'Failed to load stats');
         }
-      } catch (e: any) {
-        setStatsError(e?.message || 'Failed to load stats');
+      } catch (e: unknown) {
+        const error = e instanceof Error ? e : new Error('Failed to load stats');
+        setStatsError(error.message);
       } finally {
         setStatsLoading(false);
       }

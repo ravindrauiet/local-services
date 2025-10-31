@@ -60,8 +60,8 @@ export async function PUT(request: NextRequest) {
       // Also promote linked user to provider role (if ownerId present)
       try {
         const providerSnap = await getDoc(doc(db, 'providers', providerId));
-        const data = providerSnap.data() as any;
-        const ownerId = data?.ownerId;
+        const data = providerSnap.data();
+        const ownerId = data?.ownerId as string | undefined;
         if (ownerId) {
           await updateDoc(doc(db, 'users', ownerId), { role: 'provider' });
         }
