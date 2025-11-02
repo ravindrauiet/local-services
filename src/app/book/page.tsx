@@ -23,6 +23,9 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
+import { db, auth } from '@/lib/firebase';
+import { doc, getDoc, collection, getDocs, query, where, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { useUserAuth } from '@/contexts/UserAuthContext';
 
 // Service categories with detailed information
 const serviceCategories = {
@@ -160,6 +163,7 @@ const timeSlots = [
 function BookServiceContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user } = useUserAuth();
   const providerId = searchParams.get('provider');
   const serviceName = searchParams.get('service');
   const categoryId = searchParams.get('category');
@@ -177,7 +181,10 @@ function BookServiceContent() {
     return 1;
   });
   const [selectedService, setSelectedService] = useState<{id: string, name: string, price: string, time: string, description: string} | null>(null);
-  const [selectedProvider, setSelectedProvider] = useState<{id: string, name: string, rating: number, price: string} | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<{id: string, name: string, rating: number, price: string, serviceType?: string} | null>(null);
+  const [loadingProvider, setLoadingProvider] = useState(false);
+  const [availableProviders, setAvailableProviders] = useState<any[]>([]);
+  const [loadingProviders, setLoadingProviders] = useState(false);
   const [formData, setFormData] = useState({
     customerName: '',
     customerPhone: '',
@@ -233,23 +240,182 @@ function BookServiceContent() {
     }
     
     if (providerId) {
-      // Find provider in all categories
-      const allProviders = Object.values(serviceCategories).flatMap(cat => 
-        getCategoryProviders(cat.id)
-      );
-      const provider = allProviders.find(p => p.id === providerId);
-      if (provider) {
-        setSelectedProvider({
-          id: provider.id,
-          name: provider.name,
-          rating: provider.rating,
-          price: 'Contact for pricing'
-        });
-        // If provider is pre-selected, go to step 3 (booking form)
-        setCurrentStep(3);
-      }
+      // Load provider from Firestore
+      const loadProvider = async () => {
+        setLoadingProvider(true);
+        try {
+          const ref = doc(db, 'providers', providerId);
+          const snap = await getDoc(ref);
+          if (snap.exists()) {
+            const data = snap.data();
+            const provider = {
+              id: snap.id,
+              name: data.name || 'Unknown Provider',
+              rating: data.rating || 0,
+              price: data.price || 'Contact for pricing',
+              serviceType: data.serviceType || ''
+            };
+            setSelectedProvider(provider);
+            
+            // Auto-select service based on provider's service type
+            if (data.serviceType) {
+              const serviceTypeMap: Record<string, string> = {
+                'Electrician': 'electrician',
+                'Plumber': 'plumber',
+                'Wedding Services': 'wedding-services',
+                'Cloth Shop & Tailor': 'tailor',
+                'RO & AC Services': 'ro-ac',
+                'Beauty & Wellness': 'beauty'
+              };
+              
+              const categoryKey = serviceTypeMap[data.serviceType];
+              if (categoryKey && serviceCategories[categoryKey as keyof typeof serviceCategories]) {
+                const category = serviceCategories[categoryKey as keyof typeof serviceCategories];
+                // Select first service from the category as default, or create a generic one
+                const firstServiceKey = Object.keys(category.services)[0];
+                if (firstServiceKey) {
+                  const serviceInfo = category.services[firstServiceKey as keyof typeof category.services];
+                  setSelectedService({
+                    id: categoryKey,
+                    name: firstServiceKey,
+                    price: (serviceInfo as any).price || 'Contact for pricing',
+                    time: (serviceInfo as any).time || 'Contact for timing',
+                    description: (serviceInfo as any).description || `${firstServiceKey} service`
+                  });
+                  setFormData(prev => ({
+                    ...prev,
+                    serviceType: firstServiceKey
+                  }));
+                } else {
+                  // Generic service if none found
+                  setSelectedService({
+                    id: categoryKey,
+                    name: data.serviceType,
+                    price: 'Contact for pricing',
+                    time: 'Contact for timing',
+                    description: `${data.serviceType} service`
+                  });
+                  setFormData(prev => ({
+                    ...prev,
+                    serviceType: data.serviceType
+                  }));
+                }
+              } else {
+                // Generic service if category not found
+                setSelectedService({
+                  id: 'general',
+                  name: data.serviceType || 'Service',
+                  price: 'Contact for pricing',
+                  time: 'Contact for timing',
+                  description: `${data.serviceType || 'Service'} service`
+                });
+                setFormData(prev => ({
+                  ...prev,
+                  serviceType: data.serviceType || 'Service'
+                }));
+              }
+            }
+            
+            // If provider is pre-selected, go to step 3 (booking form)
+            setCurrentStep(3);
+          } else {
+            // Provider not found, try fallback to mock data
+            const allProviders = Object.values(serviceCategories).flatMap(cat => 
+              getCategoryProviders(cat.id)
+            );
+            const provider = allProviders.find(p => p.id === providerId);
+            if (provider) {
+              setSelectedProvider({
+                id: provider.id,
+                name: provider.name,
+                rating: provider.rating,
+                price: 'Contact for pricing'
+              });
+              setCurrentStep(3);
+            }
+          }
+        } catch (e) {
+          console.error('Failed to load provider', e);
+          // Fallback to mock data
+          const allProviders = Object.values(serviceCategories).flatMap(cat => 
+            getCategoryProviders(cat.id)
+          );
+          const provider = allProviders.find(p => p.id === providerId);
+          if (provider) {
+            setSelectedProvider({
+              id: provider.id,
+              name: provider.name,
+              rating: provider.rating,
+              price: 'Contact for pricing'
+            });
+            setCurrentStep(3);
+          }
+        } finally {
+          setLoadingProvider(false);
+        }
+      };
+      loadProvider();
     }
   }, [categoryId, serviceName, providerId]);
+
+  // Load providers from Firestore when service is selected
+  useEffect(() => {
+    const loadProvidersForCategory = async () => {
+      if (!categoryId || currentStep !== 2) return;
+      
+      // Map category ID to service type
+      const categoryToServiceType: Record<string, string> = {
+        'electrician': 'Electrician',
+        'plumber': 'Plumber',
+        'wedding-services': 'Wedding Services',
+        'tailor': 'Cloth Shop & Tailor',
+        'ro-ac': 'RO & AC Services',
+        'beauty': 'Beauty & Wellness'
+      };
+      
+      const serviceType = categoryToServiceType[categoryId];
+      if (!serviceType) return;
+      
+      setLoadingProviders(true);
+      try {
+        const q = query(
+          collection(db, 'providers'),
+          where('isApproved', '==', true),
+          where('isActive', '==', true),
+          where('serviceType', '==', serviceType)
+        );
+        const snap = await getDocs(q);
+        const providers: any[] = [];
+        snap.forEach(docSnap => {
+          const data = docSnap.data();
+          providers.push({
+            id: docSnap.id,
+            name: data.name || 'Unknown',
+            businessName: data.businessName || '',
+            rating: data.rating || 0,
+            reviews: data.totalReviews || 0,
+            experience: data.experience || '',
+            specialties: data.specialties || [],
+            photo: data.photo || '',
+            price: data.price || 'Contact for pricing',
+            responseTime: data.responseTime || '',
+            completedJobs: data.completedJobs || 0
+          });
+        });
+        
+        // Sort by rating (highest first)
+        providers.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        setAvailableProviders(providers);
+      } catch (e) {
+        console.error('Failed to load providers', e);
+        setAvailableProviders([]);
+      } finally {
+        setLoadingProviders(false);
+      }
+    };
+    
+    loadProvidersForCategory();
+  }, [categoryId, currentStep]);
 
   // Additional useEffect to handle step transition when service is selected
   useEffect(() => {
@@ -277,23 +443,53 @@ function BookServiceContent() {
     setIsSubmitting(true);
 
     try {
-      // Here you would typically save the booking to Firestore
-      // and send notifications to admin and providers
-      // For now, we'll just simulate the submission
+      // Validate required fields
+      if (!formData.customerName || !formData.customerPhone || !formData.serviceDate || !formData.serviceTime || !formData.location || !formData.address) {
+        alert('Please fill in all required fields');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Get current user ID (or use null if not logged in)
+      const userId = user?.uid || null;
+
+      // Prepare booking data
+      const bookingData = {
+        userId: userId || 'guest', // Use 'guest' if user not logged in
+        providerId: selectedProvider?.id || '', // Optional - will be assigned by admin
+        serviceType: formData.serviceType || selectedService?.name || 'Service',
+        customerName: formData.customerName,
+        customerPhone: formData.customerPhone,
+        customerEmail: formData.customerEmail || null,
+        serviceDate: formData.serviceDate,
+        serviceTime: formData.serviceTime,
+        location: formData.location,
+        address: formData.address,
+        additionalNotes: formData.additionalNotes || null,
+        status: 'pending', // Initial status - admin will assign provider
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      };
+
+      // Save booking to Firestore
+      const bookingRef = await addDoc(collection(db, 'bookings'), bookingData);
       
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('Booking saved successfully with ID:', bookingRef.id);
       
       setIsSubmitted(true);
       
-      // Redirect to success page or show success message
+      // Redirect to dashboard or success page
       setTimeout(() => {
-        router.push('/');
-      }, 3000);
+        if (userId) {
+          router.push('/dashboard');
+        } else {
+          router.push('/');
+        }
+      }, 2000);
       
     } catch (error) {
       console.error('Error submitting booking:', error);
       alert('There was an error submitting your booking. Please try again.');
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -324,6 +520,17 @@ function BookServiceContent() {
           <p className="text-sm text-gray-500">
             You&apos;ll be redirected to the home page shortly...
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loadingProvider && providerId) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading provider information...</p>
         </div>
       </div>
     );
@@ -399,7 +606,27 @@ function BookServiceContent() {
                 return (
                   <div
                     key={category.id}
-                    onClick={() => setCurrentStep(2)}
+                    onClick={() => {
+                      // Get first service from category
+                      const firstServiceKey = Object.keys(category.services)[0];
+                      if (firstServiceKey) {
+                        const serviceInfo = category.services[firstServiceKey as keyof typeof category.services];
+                        setSelectedService({
+                          id: category.id,
+                          name: firstServiceKey,
+                          price: (serviceInfo as any).price || 'Contact for pricing',
+                          time: (serviceInfo as any).time || 'Contact for timing',
+                          description: (serviceInfo as any).description || `${firstServiceKey} service`
+                        });
+                        setFormData(prev => ({
+                          ...prev,
+                          serviceType: firstServiceKey
+                        }));
+                        // Update URL with category
+                        router.push(`/book?category=${category.id}&service=${encodeURIComponent(firstServiceKey)}`);
+                      }
+                      setCurrentStep(2);
+                    }}
                     className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 cursor-pointer group border-2 border-transparent hover:border-blue-200"
                   >
                     <div className={`bg-gradient-to-r ${category.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
@@ -464,55 +691,108 @@ function BookServiceContent() {
               </div>
 
               {/* Providers List */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {categoryId && getCategoryProviders(categoryId).map((provider) => (
-                  <div
-                    key={provider.id}
-                    onClick={() => handleProviderSelect({
-                      id: provider.id,
-                      name: provider.name,
-                      rating: provider.rating,
-                      price: 'Contact for pricing'
-                    })}
-                    className="border-2 border-gray-200 rounded-xl p-6 hover:border-blue-300 hover:shadow-lg transition-all duration-300 cursor-pointer group"
+              {loadingProviders ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                  <p className="text-gray-600">Loading providers...</p>
+                </div>
+              ) : availableProviders.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {availableProviders.map((provider) => (
+                    <div
+                      key={provider.id}
+                      onClick={() => handleProviderSelect({
+                        id: provider.id,
+                        name: provider.name,
+                        rating: provider.rating,
+                        price: provider.price || 'Contact for pricing'
+                      })}
+                      className="border-2 border-gray-200 rounded-xl p-6 hover:border-blue-300 hover:shadow-lg transition-all duration-300 cursor-pointer group"
+                    >
+                      <div className="flex items-center mb-4">
+                        {provider.photo ? (
+                          <img
+                            src={provider.photo}
+                            alt={provider.name}
+                            className="w-12 h-12 rounded-full object-cover mr-4 border-2 border-gray-200"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                              (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                            }}
+                          />
+                        ) : null}
+                        <div className={`w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-4 ${provider.photo ? 'hidden' : ''}`}>
+                          {provider.photo ? null : (
+                            <span className="text-white font-bold text-lg">
+                              {provider.name?.charAt(0) || '?'}
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-gray-900">{provider.name}</h3>
+                          <p className="text-sm text-gray-600">{provider.businessName}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center mb-3">
+                        <StarIconSolid className="h-4 w-4 text-yellow-400 mr-1" />
+                        <span className="text-sm font-semibold text-gray-900">{provider.rating.toFixed(1)}</span>
+                        <span className="text-sm text-gray-500 ml-2">({provider.reviews || 0} reviews)</span>
+                      </div>
+                      
+                      {provider.specialties && provider.specialties.length > 0 && (
+                        <div className="mb-3">
+                          <div className="text-xs text-gray-500 mb-1">Specialties:</div>
+                          <div className="flex flex-wrap gap-1">
+                            {provider.specialties.slice(0, 3).map((specialty: string, index: number) => (
+                              <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs">
+                                {specialty}
+                              </span>
+                            ))}
+                            {provider.specialties.length > 3 && (
+                              <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs">
+                                +{provider.specialties.length - 3} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          {provider.experience && (
+                            <>
+                              <div className="text-xs text-gray-500">Experience</div>
+                              <div className="text-sm font-semibold text-gray-900">{provider.experience}</div>
+                            </>
+                          )}
+                          {provider.responseTime && (
+                            <>
+                              <div className="text-xs text-gray-500 mt-1">Response Time</div>
+                              <div className="text-sm font-semibold text-gray-900">{provider.responseTime}</div>
+                            </>
+                          )}
+                        </div>
+                        <ArrowRightIcon className="h-5 w-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <UserGroupIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">No Providers Available</h3>
+                  <p className="text-gray-600 mb-6">
+                    There are no verified providers available for this service at the moment.
+                  </p>
+                  <button
+                    onClick={() => setCurrentStep(1)}
+                    className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-semibold"
                   >
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-4">
-                        <UserGroupIcon className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-gray-900">{provider.name}</h3>
-                        <p className="text-sm text-gray-600">{provider.businessName}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center mb-3">
-                      <StarIconSolid className="h-4 w-4 text-yellow-400 mr-1" />
-                      <span className="text-sm font-semibold text-gray-900">{provider.rating}</span>
-                      <span className="text-sm text-gray-500 ml-2">({provider.reviews} reviews)</span>
-                    </div>
-                    
-                    <div className="mb-3">
-                      <div className="text-xs text-gray-500 mb-1">Specialties:</div>
-                      <div className="flex flex-wrap gap-1">
-                        {provider.specialties.map((specialty, index) => (
-                          <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs">
-                            {specialty}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-xs text-gray-500">Experience</div>
-                        <div className="text-sm font-semibold text-gray-900">{provider.experience}</div>
-                      </div>
-                      <ArrowRightIcon className="h-5 w-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
-                    </div>
-                  </div>
-                ))}
-              </div>
+                    Choose a Different Service
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

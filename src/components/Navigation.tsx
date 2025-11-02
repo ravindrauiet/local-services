@@ -118,6 +118,12 @@ const Navigation = () => {
                 </button>
                 {isProfileMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-lg shadow-lg">
+                    <Link 
+                      href={profile.role === 'provider' ? '/provider/dashboard' : '/dashboard'} 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                    >
+                      Dashboard
+                    </Link>
                     <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profile</Link>
                     <button onClick={logout} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Logout</button>
                   </div>
@@ -189,8 +195,15 @@ const Navigation = () => {
                 {profile ? (
                   <>
                     <Link
-                      href="/profile"
+                      href={profile.role === 'provider' ? '/provider/dashboard' : '/dashboard'}
                       className="block mx-4 mt-3 text-gray-700 px-4 py-3 rounded-lg font-semibold text-center hover:bg-blue-50 transition-all duration-300"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                      href="/profile"
+                      className="block mx-4 mt-2 text-gray-700 px-4 py-3 rounded-lg font-semibold text-center hover:bg-blue-50 transition-all duration-300"
                       onClick={() => setIsOpen(false)}
                     >
                       {profile.name}

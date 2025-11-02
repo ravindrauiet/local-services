@@ -25,40 +25,32 @@ import {
   CogIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid, HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
+import { db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
-// Enhanced mock data with more details
-const mockProvider = {
-  id: '3',
-  name: 'Priya Singh',
-  businessName: 'Priya Wedding Services',
-  serviceType: 'Wedding Services',
-  address: 'Sector 22, Noida, Uttar Pradesh 201301',
-  phone: '+91 98765 43212',
-  email: 'priya@weddingservices.com',
-  rating: 4.9,
-  totalReviews: 156,
-  description: 'Complete wedding services including pandit booking, samagri, decorations, and event management. With over 12 years of experience, I have successfully organized more than 500+ weddings across Delhi NCR. Specializing in traditional Hindu weddings, I ensure every detail is perfect for your special day.',
-  experience: '12+ years',
-  services: [
-    'Pandit Booking & Arrangements',
-    'Complete Samagri Supply',
-    'Wedding Decorations',
-    'Event Management',
-    'Photography Coordination',
-    'Catering Arrangements',
-    'Guest Management',
-    'Traditional Rituals'
-  ],
-  workingHours: '9:00 AM - 8:00 PM (Mon-Sat)',
-  photo: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face',
-  isApproved: true,
-  price: '₹15,000 - ₹50,000',
-  responseTime: '2 hours',
-  verified: true,
-  completedWeddings: 500,
-  specialties: ['Traditional Hindu Weddings', 'Destination Weddings', 'Intimate Ceremonies'],
-  languages: ['Hindi', 'English', 'Punjabi']
-};
+interface Provider {
+  id: string;
+  name: string;
+  businessName?: string;
+  serviceType: string;
+  address: string;
+  phone: string;
+  email: string;
+  rating: number;
+  totalReviews: number;
+  description: string;
+  experience?: string;
+  services?: string[];
+  workingHours?: string;
+  photo?: string;
+  isApproved: boolean;
+  price?: string;
+  responseTime?: string;
+  verified?: boolean;
+  completedWeddings?: number;
+  specialties: string[];
+  languages?: string[];
+}
 
 const mockReviews = [
   {
@@ -111,11 +103,53 @@ const serviceIcons = {
 export default function ProviderDetailPage() {
   const params = useParams();
   const providerId = params.id as string;
-  const [provider, setProvider] = useState(mockProvider);
+  const [provider, setProvider] = useState<Provider | null>(null);
   const [reviews, setReviews] = useState(mockReviews);
   const [selectedTab, setSelectedTab] = useState('about');
 
-  const ServiceIcon = serviceIcons[provider.serviceType as keyof typeof serviceIcons] || SparklesIcon;
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const ref = doc(db, 'providers', providerId);
+        const snap = await getDoc(ref);
+        if (!snap.exists()) {
+          setProvider(null);
+          return;
+        }
+        const data = snap.data();
+        const p: Provider = {
+          id: snap.id,
+          name: data.name || 'Unknown',
+          businessName: data.businessName || '',
+          serviceType: data.serviceType || 'Services',
+          address: data.address || '',
+          phone: data.phone || '',
+          email: data.email || '',
+          rating: data.rating || 0,
+          totalReviews: data.totalReviews || 0,
+          description: data.description || '',
+          experience: data.experience || '',
+          services: data.services || [],
+          workingHours: data.workingHours || '',
+          photo: data.photo || '',
+          isApproved: data.isApproved || false,
+          price: data.price || '',
+          responseTime: data.responseTime || '',
+          verified: data.verified || false,
+          completedWeddings: data.completedWeddings || data.completedJobs || 0,
+          specialties: data.specialties || [],
+          languages: data.languages || []
+        };
+        setProvider(p);
+      } catch (e) {
+        console.error('Failed to load provider', e);
+        setProvider(null);
+      }
+    };
+    if (providerId) load();
+  }, [providerId]);
+
+  const ServiceIcon = serviceIcons[(provider?.serviceType as keyof typeof serviceIcons) || ''] || SparklesIcon;
 
   const renderStars = (rating: number) => {
     return (
@@ -156,6 +190,25 @@ export default function ProviderDetailPage() {
     { id: 'reviews', label: 'Reviews', icon: ChatBubbleLeftRightIcon },
     { id: 'contact', label: 'Contact', icon: PhoneIcon }
   ];
+
+  if (provider === null) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center text-gray-600">
+          <p>Provider not found.</p>
+          <Link href="/providers" className="text-pink-600 font-semibold underline">Back to Providers</Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!provider) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-pulse text-gray-400">Loading provider...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -220,7 +273,7 @@ export default function ProviderDetailPage() {
               {/* Key Stats */}
               <div className="grid grid-cols-3 gap-6 mb-8">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-white">{provider.completedWeddings}+</div>
+                  <div className="text-2xl font-bold text-white">{provider.completedWeddings || 0}+</div>
                   <div className="text-sm text-pink-200">Weddings Completed</div>
                 </div>
                 <div className="text-center">
@@ -253,11 +306,20 @@ export default function ProviderDetailPage() {
             {/* Right Content - Provider Photo */}
             <div className="relative">
               <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
-                <img
-                  src={provider.photo}
-                  alt={provider.name}
-                  className="w-full h-80 object-cover rounded-2xl"
-                />
+                {provider.photo ? (
+                  <img
+                    src={provider.photo}
+                    alt={provider.name}
+                    className="w-full h-80 object-cover rounded-2xl"
+                    onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')}
+                  />
+                ) : (
+                  <div className="w-full h-80 rounded-2xl bg-white/20 flex items-center justify-center">
+                    <div className="w-24 h-24 rounded-full bg-pink-600 text-white flex items-center justify-center text-4xl font-bold">
+                      {provider.name?.charAt(0) || '?'}
+                    </div>
+                  </div>
+                )}
                 <div className="absolute -top-4 -right-4 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full p-4 shadow-lg">
                   <HeartIconSolid className="h-8 w-8 text-white" />
                 </div>
@@ -304,7 +366,7 @@ export default function ProviderDetailPage() {
                   <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Specialties</h3>
                     <ul className="space-y-2">
-                      {provider.specialties.map((specialty, index) => (
+                      {provider.specialties?.map((specialty, index) => (
                         <li key={index} className="flex items-center">
                           <CheckCircleIcon className="h-5 w-5 text-pink-500 mr-3" />
                           <span className="text-gray-700">{specialty}</span>
@@ -316,7 +378,7 @@ export default function ProviderDetailPage() {
                   <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Languages</h3>
                     <ul className="space-y-2">
-                      {provider.languages.map((language, index) => (
+                      {provider.languages?.map((language, index) => (
                         <li key={index} className="flex items-center">
                           <CheckCircleIcon className="h-5 w-5 text-blue-500 mr-3" />
                           <span className="text-gray-700">{language}</span>
@@ -333,7 +395,7 @@ export default function ProviderDetailPage() {
               <div className="bg-white rounded-2xl shadow-lg p-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Services Offered</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {provider.services.map((service, index) => (
+                  {provider.services?.map((service, index) => (
                     <div key={index} className="flex items-center p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl">
                       <CheckCircleIcon className="h-6 w-6 text-pink-500 mr-4" />
                       <span className="text-gray-700 font-medium">{service}</span>
@@ -349,7 +411,7 @@ export default function ProviderDetailPage() {
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-gray-900">Customer Reviews</h2>
                   <div className="text-right">
-                    <div className="text-3xl font-bold text-gray-900">{provider.rating}</div>
+                  <div className="text-3xl font-bold text-gray-900">{provider.rating}</div>
                     <div className="flex items-center">
                       {renderStars(provider.rating)}
                     </div>
