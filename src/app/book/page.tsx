@@ -23,8 +23,8 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
-import { db, auth } from '@/lib/firebase';
-import { doc, getDoc, collection, getDocs, query, where, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, collection, getDocs, query, where, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useUserAuth } from '@/contexts/UserAuthContext';
 
 // Service categories with detailed information
@@ -183,7 +183,24 @@ function BookServiceContent() {
   const [selectedService, setSelectedService] = useState<{id: string, name: string, price: string, time: string, description: string} | null>(null);
   const [selectedProvider, setSelectedProvider] = useState<{id: string, name: string, rating: number, price: string, serviceType?: string} | null>(null);
   const [loadingProvider, setLoadingProvider] = useState(false);
-  const [availableProviders, setAvailableProviders] = useState<any[]>([]);
+  const [availableProviders, setAvailableProviders] = useState<Array<{
+    id: string;
+    name: string;
+    businessName?: string;
+    serviceType: string;
+    rating: number;
+    address: string;
+    phone: string;
+    email: string;
+    description?: string;
+    price?: string;
+    reviews?: number;
+    experience?: string;
+    specialties?: string[];
+    photo?: string;
+    responseTime?: string;
+    completedJobs?: number;
+  }>>([]);
   const [loadingProviders, setLoadingProviders] = useState(false);
   const [formData, setFormData] = useState({
     customerName: '',
@@ -274,13 +291,13 @@ function BookServiceContent() {
                 // Select first service from the category as default, or create a generic one
                 const firstServiceKey = Object.keys(category.services)[0];
                 if (firstServiceKey) {
-                  const serviceInfo = category.services[firstServiceKey as keyof typeof category.services];
+                  const serviceInfo = category.services[firstServiceKey as keyof typeof category.services] as { price: string; time: string; description: string };
                   setSelectedService({
                     id: categoryKey,
                     name: firstServiceKey,
-                    price: (serviceInfo as any).price || 'Contact for pricing',
-                    time: (serviceInfo as any).time || 'Contact for timing',
-                    description: (serviceInfo as any).description || `${firstServiceKey} service`
+                    price: serviceInfo?.price || 'Contact for pricing',
+                    time: serviceInfo?.time || 'Contact for timing',
+                    description: serviceInfo?.description || `${firstServiceKey} service`
                   });
                   setFormData(prev => ({
                     ...prev,
@@ -385,14 +402,34 @@ function BookServiceContent() {
           where('serviceType', '==', serviceType)
         );
         const snap = await getDocs(q);
-        const providers: any[] = [];
+        const providers: Array<{
+          id: string;
+          name: string;
+          businessName?: string;
+          serviceType: string;
+          rating: number;
+          address: string;
+          phone: string;
+          email: string;
+          reviews?: number;
+          experience?: string;
+          specialties?: string[];
+          photo?: string;
+          price?: string;
+          responseTime?: string;
+          completedJobs?: number;
+        }> = [];
         snap.forEach(docSnap => {
           const data = docSnap.data();
           providers.push({
             id: docSnap.id,
             name: data.name || 'Unknown',
             businessName: data.businessName || '',
+            serviceType: data.serviceType || serviceType,
             rating: data.rating || 0,
+            address: data.address || '',
+            phone: data.phone || '',
+            email: data.email || '',
             reviews: data.totalReviews || 0,
             experience: data.experience || '',
             specialties: data.specialties || [],
@@ -610,14 +647,14 @@ function BookServiceContent() {
                       // Get first service from category
                       const firstServiceKey = Object.keys(category.services)[0];
                       if (firstServiceKey) {
-                        const serviceInfo = category.services[firstServiceKey as keyof typeof category.services];
-                        setSelectedService({
-                          id: category.id,
-                          name: firstServiceKey,
-                          price: (serviceInfo as any).price || 'Contact for pricing',
-                          time: (serviceInfo as any).time || 'Contact for timing',
-                          description: (serviceInfo as any).description || `${firstServiceKey} service`
-                        });
+                      const serviceInfo = category.services[firstServiceKey as keyof typeof category.services] as { price: string; time: string; description: string };
+                      setSelectedService({
+                        id: category.id,
+                        name: firstServiceKey,
+                        price: serviceInfo?.price || 'Contact for pricing',
+                        time: serviceInfo?.time || 'Contact for timing',
+                        description: serviceInfo?.description || `${firstServiceKey} service`
+                      });
                         setFormData(prev => ({
                           ...prev,
                           serviceType: firstServiceKey

@@ -174,9 +174,11 @@ export default function CustomerDashboard() {
 
   const filteredBookings = bookings.filter(booking => {
     const matchesStatus = filterStatus === 'all' || booking.status === filterStatus;
-    const matchesSearch = 
+    const matchesSearch =
       booking.serviceType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.providerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.assignedProviderName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.providerData?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.providerData?.businessName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.location.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStatus && matchesSearch;

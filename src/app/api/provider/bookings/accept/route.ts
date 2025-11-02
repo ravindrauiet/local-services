@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
-import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, serverTimestamp, FieldValue } from 'firebase/firestore';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,10 +25,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const bookingData = bookingSnap.data();
-
     // Update booking assignment status
-    const updateData: any = {
+    const updateData: Record<string, string | null | boolean | FieldValue> = {
       assignmentStatus: accept ? 'accepted' : 'rejected',
       updatedAt: serverTimestamp(),
     };

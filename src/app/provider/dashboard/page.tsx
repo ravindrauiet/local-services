@@ -30,7 +30,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon as CheckCircleIconSolid, StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs, orderBy, Timestamp, doc, getDoc, updateDoc, serverTimestamp, limit } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, Timestamp, doc, getDoc, updateDoc, serverTimestamp, limit, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
 import Footer from '@/components/Footer';
 
 interface Booking {
@@ -190,11 +190,16 @@ export default function ProviderDashboardPage() {
             allBookingDocs.set(doc.id, doc);
           });
           
-          const finalSnapshot = {
+          type QuerySnapshotLike = {
+            docs: QueryDocumentSnapshot<DocumentData>[];
+            empty: boolean;
+            size: number;
+          };
+          const finalSnapshot: QuerySnapshotLike = {
             docs: Array.from(allBookingDocs.values()),
             empty: allBookingDocs.size === 0,
             size: allBookingDocs.size
-          } as any;
+          };
           const bookingsData: Booking[] = [];
           
           for (const docSnap of finalSnapshot.docs) {
@@ -258,7 +263,7 @@ export default function ProviderDashboardPage() {
       
       // Update local state
       setBookings(prev => prev.map(b => 
-        b.id === bookingId ? { ...b, status: newStatus as any, updatedAt: Timestamp.now() } : b
+        b.id === bookingId ? { ...b, status: newStatus as 'pending' | 'accepted' | 'in-progress' | 'completed' | 'cancelled', updatedAt: Timestamp.now() } : b
       ));
     } catch (err) {
       console.error('Error updating booking:', err);
@@ -356,7 +361,7 @@ export default function ProviderDashboardPage() {
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold mb-2">Provider Dashboard</h1>
-              <p className="text-green-100">Welcome, {providerData?.businessName || profile.name}</p>
+              <p className="text-green-100">Welcome, {providerData?.businessName || profile?.name || 'Provider'}</p>
               {providerData && (
                 <div className="flex items-center gap-4 mt-2">
                   {providerData.rating > 0 && (

@@ -6,16 +6,8 @@ import { useSimpleAdminAuth } from '@/contexts/SimpleAdminAuthContext';
 import {
   UserIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
-  ShieldCheckIcon,
-  XCircleIcon,
-  CheckCircleIcon,
-  EnvelopeIcon,
-  PhoneIcon,
-  CalendarIcon,
-  BuildingOfficeIcon
+  FunnelIcon
 } from '@heroicons/react/24/outline';
-import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/24/solid';
 
 interface User {
   id: string;
@@ -95,10 +87,19 @@ export default function AdminUsersPage() {
     }
   };
 
-  const formatDate = (date: any) => {
+  const formatDate = (date: Date | { seconds: number; nanoseconds: number } | string | undefined) => {
     if (!date) return 'N/A';
     try {
-      const d = date.seconds ? new Date(date.seconds * 1000) : new Date(date);
+      let d: Date;
+      if (date instanceof Date) {
+        d = date;
+      } else if (typeof date === 'string') {
+        d = new Date(date);
+      } else if (typeof date === 'object' && 'seconds' in date && typeof date.seconds === 'number') {
+        d = new Date(date.seconds * 1000);
+      } else {
+        return 'N/A';
+      }
       return d.toLocaleDateString('en-IN', { 
         year: 'numeric', 
         month: 'short', 

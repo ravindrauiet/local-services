@@ -17,10 +17,10 @@ import {
   ArrowPathIcon,
   UserGroupIcon,
   BuildingOfficeIcon,
-  HandThumbUpIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/24/solid';
+import { Timestamp } from 'firebase/firestore';
 
 interface Booking {
   id: string;
@@ -155,10 +155,22 @@ export default function AdminBookingsPage() {
     return matchesStatus && matchesSearch;
   });
 
-  const formatDate = (date: any) => {
+  const formatDate = (date: string | Date | Timestamp | { seconds: number; nanoseconds: number } | undefined) => {
     if (!date) return 'N/A';
     try {
-      const d = date.seconds ? new Date(date.seconds * 1000) : new Date(date);
+      let d: Date;
+      if (date instanceof Date) {
+        d = date;
+      } else if (typeof date === 'string') {
+        d = new Date(date);
+      } else if (date instanceof Timestamp) {
+        d = date.toDate();
+      } else if (typeof date === 'object' && 'seconds' in date && typeof date.seconds === 'number') {
+        d = new Date(date.seconds * 1000);
+      } else {
+        // Fallback - should not reach here
+        return 'N/A';
+      }
       return d.toLocaleDateString('en-IN', { 
         weekday: 'short', 
         year: 'numeric', 
@@ -239,9 +251,6 @@ export default function AdminBookingsPage() {
           <div className="space-y-4">
             {filteredBookings.map((booking) => {
               const StatusIcon = statusConfig[booking.status].icon;
-              const AssignmentStatusIcon = booking.assignmentStatus 
-                ? assignmentStatusConfig[booking.assignmentStatus].icon 
-                : null;
               
               // Filter providers by service type
               const availableProviders = providers.filter(p => 
@@ -261,12 +270,15 @@ export default function AdminBookingsPage() {
                               <StatusIcon className="h-3 w-3 inline mr-1" />
                               {statusConfig[booking.status].label}
                             </span>
-                            {booking.assignmentStatus && (
-                              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${assignmentStatusConfig[booking.assignmentStatus].color}`}>
-                                <AssignmentStatusIcon className="h-3 w-3 inline mr-1" />
-                                {assignmentStatusConfig[booking.assignmentStatus].label}
-                              </span>
-                            )}
+                            {booking.assignmentStatus && (() => {
+                              const AssignmentStatusIcon = assignmentStatusConfig[booking.assignmentStatus].icon;
+                              return (
+                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${assignmentStatusConfig[booking.assignmentStatus].color}`}>
+                                  <AssignmentStatusIcon className="h-3 w-3 inline mr-1" />
+                                  {assignmentStatusConfig[booking.assignmentStatus].label}
+                                </span>
+                              );
+                            })()}
                           </div>
                           
                           {booking.assignedProviderName && (

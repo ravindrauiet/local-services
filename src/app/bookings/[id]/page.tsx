@@ -339,7 +339,7 @@ export default function BookingDetailsPage() {
                         ✓ Provider confirmed • Available: {booking.providerAvailability}
                       </div>
                     )}
-                    {booking.providerData?.rating > 0 && (
+                    {booking.providerData?.rating && booking.providerData.rating > 0 && (
                       <div className="flex items-center gap-1 mt-1">
                         <StarIconSolid className="h-4 w-4 text-yellow-400" />
                         <span className="text-sm text-gray-600">{booking.providerData.rating.toFixed(1)} Rating</span>
