@@ -26,7 +26,10 @@ import {
   ClockIcon,
   UserGroupIcon,
   ChartBarIcon,
-  GlobeAltIcon
+  GlobeAltIcon,
+  IdentificationIcon,
+  DocumentTextIcon,
+  BanknotesIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { db, storage, auth } from '@/lib/firebase';
@@ -121,21 +124,28 @@ export default function ProviderRegistration() {
     email: '',
     description: '',
     experience: '',
+    gstNo: '',
+    accountNo: '',
+    aadharNo: '',
+    panNo: '',
     photo: null as File | null,
-    logo: null as File | null
+    logo: null as File | null,
+    documentPhoto: null as File | null
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    // Convert PAN number to uppercase
+    const processedValue = name === 'panNo' ? value.toUpperCase() : value;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: processedValue
     }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'photo' | 'logo') => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'photo' | 'logo' | 'documentPhoto') => {
     const file = e.target.files?.[0] || null;
     setFormData(prev => ({
       ...prev,
@@ -160,6 +170,7 @@ export default function ProviderRegistration() {
       // Upload optional files to Storage
       let photoUrl: string | undefined;
       let logoUrl: string | undefined;
+      let documentPhotoUrl: string | undefined;
 
       if (formData.photo) {
         const photoRef = ref(storage, `providers/photos/${Date.now()}_${formData.photo.name}`);
@@ -170,6 +181,11 @@ export default function ProviderRegistration() {
         const logoRef = ref(storage, `providers/logos/${Date.now()}_${formData.logo.name}`);
         await uploadBytes(logoRef, formData.logo);
         logoUrl = await getDownloadURL(logoRef);
+      }
+      if (formData.documentPhoto) {
+        const documentRef = ref(storage, `providers/documents/${Date.now()}_${formData.documentPhoto.name}`);
+        await uploadBytes(documentRef, formData.documentPhoto);
+        documentPhotoUrl = await getDownloadURL(documentRef);
       }
 
       // Save provider document to Firestore
@@ -182,6 +198,10 @@ export default function ProviderRegistration() {
         email: formData.email,
         description: formData.description,
         experience: formData.experience || null,
+        gstNo: formData.gstNo || null,
+        accountNo: formData.accountNo || null,
+        aadharNo: formData.aadharNo || null,
+        panNo: formData.panNo || null,
         rating: 0,
         totalReviews: 0,
         totalBookings: 0,
@@ -191,6 +211,7 @@ export default function ProviderRegistration() {
         updatedAt: serverTimestamp(),
         photo: photoUrl || null,
         logo: logoUrl || null,
+        documentPhoto: documentPhotoUrl || null,
         ownerId: auth.currentUser?.uid || null,
       });
 
@@ -499,6 +520,97 @@ export default function ProviderRegistration() {
                   </div>
                 </div>
 
+                {/* Business & Financial Information */}
+                <div className="space-y-6">
+                  <h3 className="text-xl font-bold text-gray-900 flex items-center">
+                    <BanknotesIcon className="h-6 w-6 mr-3 text-green-600" />
+                    Business & Financial Information
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="gstNo" className="block text-sm font-medium text-gray-700 mb-2">
+                        GST Number (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        id="gstNo"
+                        name="gstNo"
+                        value={formData.gstNo}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg"
+                        placeholder="Enter GST number (if available)"
+                        maxLength={15}
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Enter your GST number if you have one</p>
+                    </div>
+
+                    <div>
+                      <label htmlFor="accountNo" className="block text-sm font-medium text-gray-700 mb-2">
+                        Bank Account Number *
+                      </label>
+                      <input
+                        type="text"
+                        id="accountNo"
+                        name="accountNo"
+                        required
+                        value={formData.accountNo}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg"
+                        placeholder="Enter bank account number"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Identity Documents */}
+                <div className="space-y-6">
+                  <h3 className="text-xl font-bold text-gray-900 flex items-center">
+                    <IdentificationIcon className="h-6 w-6 mr-3 text-green-600" />
+                    Identity Documents
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="aadharNo" className="block text-sm font-medium text-gray-700 mb-2">
+                        Aadhar Number *
+                      </label>
+                      <input
+                        type="text"
+                        id="aadharNo"
+                        name="aadharNo"
+                        required
+                        value={formData.aadharNo}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg"
+                        placeholder="Enter 12-digit Aadhar number"
+                        maxLength={12}
+                        pattern="[0-9]{12}"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Enter your 12-digit Aadhar number</p>
+                    </div>
+
+                    <div>
+                      <label htmlFor="panNo" className="block text-sm font-medium text-gray-700 mb-2">
+                        PAN Number *
+                      </label>
+                      <input
+                        type="text"
+                        id="panNo"
+                        name="panNo"
+                        required
+                        value={formData.panNo}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg uppercase"
+                        placeholder="Enter PAN number"
+                        maxLength={10}
+                        pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Enter your 10-character PAN number</p>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Location Information */}
                 <div className="space-y-6">
                   <h3 className="text-xl font-bold text-gray-900 flex items-center">
@@ -556,6 +668,31 @@ export default function ProviderRegistration() {
                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg"
                       />
                     </div>
+                  </div>
+                </div>
+
+                {/* Document Upload */}
+                <div className="space-y-6">
+                  <h3 className="text-xl font-bold text-gray-900 flex items-center">
+                    <DocumentTextIcon className="h-6 w-6 mr-3 text-green-600" />
+                    Document Upload
+                  </h3>
+                  
+                  <div>
+                    <label htmlFor="documentPhoto" className="block text-sm font-medium text-gray-700 mb-2">
+                      Document Photo *
+                    </label>
+                    <input
+                      type="file"
+                      id="documentPhoto"
+                      accept="image/*"
+                      required
+                      onChange={(e) => handleFileChange(e, 'documentPhoto')}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Upload photo of your Aadhar card, PAN card, or other identity documents
+                    </p>
                   </div>
                 </div>
 
