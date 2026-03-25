@@ -1,4 +1,4 @@
-# Favicon Generation Guide for Mithila Shilpi
+# Favicon Generation Guide for Milyo
 
 ## Required Favicon Files
 

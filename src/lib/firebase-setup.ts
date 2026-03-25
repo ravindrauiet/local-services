@@ -17,7 +17,7 @@ export class FirebaseSetupService {
       const admins = [
         {
           id: 'admin1',
-          email: 'admin@mithilashilpi.com',
+          email: 'admin@milyo.com',
           password: 'admin123', // In production, hash this
           name: 'System Administrator',
           role: 'super-admin',

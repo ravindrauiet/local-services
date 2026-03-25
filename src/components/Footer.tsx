@@ -28,13 +28,13 @@ export default function Footer() {
               <div className="w-10 h-10 rounded-xl overflow-hidden mr-3">
                 <Image
                   src="/logo.png"
-                  alt="Mithila Shilpi Logo"
+                  alt="Milyo Logo"
                   width={40}
                   height={40}
                   className="w-full h-full object-contain"
                 />
               </div>
-              <h3 className="text-2xl font-bold">Mithila Shilpi</h3>
+              <h3 className="text-2xl font-bold">Milyo</h3>
             </div>
             <p className="text-gray-300 mb-6 leading-relaxed">
               Connecting you with the best craftsmen and service providers. Quality services, 
@@ -156,8 +156,8 @@ export default function Footer() {
               
               <div className="flex items-center">
                 <EnvelopeIcon className="h-5 w-5 text-purple-400 mr-3 flex-shrink-0" />
-                <a href="mailto:info@mithilashilpi.com" className="text-gray-300 hover:text-white transition-colors">
-                  info@mithilashilpi.com
+                <a href="mailto:info@milyo.com" className="text-gray-300 hover:text-white transition-colors">
+                  info@milyo.com
                 </a>
               </div>
             </div>

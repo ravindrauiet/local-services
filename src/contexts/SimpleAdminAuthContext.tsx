@@ -45,10 +45,10 @@ export function SimpleAdminAuthProvider({ children }: { children: ReactNode }) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Check credentials
-      if (email === 'admin@mithilashilpi.com' && password === 'admin123') {
+      if (email === 'admin@milyo.com' && password === 'admin123') {
         const adminData = {
           id: '1',
-          email: 'admin@mithilashilpi.com',
+          email: 'admin@milyo.com',
           name: 'System Administrator',
           role: 'super-admin' as const,
           permissions: ['*']
@@ -61,10 +61,10 @@ export function SimpleAdminAuthProvider({ children }: { children: ReactNode }) {
       }
       
       // Check moderator credentials
-      if (email === 'moderator@mithilashilpi.com' && password === 'mod123') {
+      if (email === 'moderator@milyo.com' && password === 'mod123') {
         const adminData = {
           id: '2',
-          email: 'moderator@mithilashilpi.com',
+          email: 'moderator@milyo.com',
           name: 'Moderator',
           role: 'admin' as const,
           permissions: ['read', 'update']

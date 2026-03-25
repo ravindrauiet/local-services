@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mithila Shilpi - Local Services Platform",
+  title: "Milyo - Local Services Platform",
   description: "Connect with verified craftsmen and service providers. Find and book local services like electricians, plumbers, wedding services, and more in your area",
   icons: {
     icon: [

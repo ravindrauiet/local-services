@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // Mock data - in a real app, this would come from Firebase
 const mockSettings = {
   platform: {
-    name: 'Mithila Shilpi',
+    name: 'Milyo',
     description: 'Connect with verified craftsmen and service providers in your area',
     logo: '/logo.png',
     favicon: '/favicon.ico',
@@ -23,9 +23,9 @@ const mockSettings = {
     emailNotifications: true,
     smsNotifications: true,
     pushNotifications: true,
-    adminEmail: 'admin@mithilashilpi.com',
-    supportEmail: 'support@mithilashilpi.com',
-    notificationEmail: 'notifications@mithilashilpi.com'
+    adminEmail: 'admin@milyo.com',
+    supportEmail: 'support@milyo.com',
+    notificationEmail: 'notifications@milyo.com'
   },
   payment: {
     paymentMethods: ['UPI', 'Credit Card', 'Debit Card', 'Net Banking'],

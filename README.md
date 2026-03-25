@@ -1,6 +1,6 @@
-# Mithila Shilpi - Local Services Platform
+# Milyo - Local Services Platform
 
-A comprehensive platform for finding and booking local services like electricians, plumbers, wedding services, and more. Mithila Shilpi connects customers with skilled craftsmen and service providers in their area.
+A comprehensive platform for finding and booking local services like electricians, plumbers, wedding services, and more. Milyo connects customers with skilled craftsmen and service providers in their area.
 
 ## Features
 
@@ -43,7 +43,7 @@ A comprehensive platform for finding and booking local services like electrician
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd mithila-shilpi
+   cd milyo
    ```
 
 2. **Install dependencies**
@@ -65,12 +65,12 @@ A comprehensive platform for finding and booking local services like electrician
 Access the admin dashboard at `/admin/login` with these credentials:
 
 **Super Admin:**
-- Email: `admin@mithilashilpi.com`
+- Email: `admin@milyo.com`
 - Password: `admin123`
 - Permissions: Full access to all features
 
 **Moderator:**
-- Email: `moderator@mithilashilpi.com`
+- Email: `moderator@milyo.com`
 - Password: `mod123`
 - Permissions: Limited access to provider and booking management
 
@@ -265,4 +265,4 @@ This project is licensed under the MIT License.
 
 ## Support
 
-For support, email support@mithilashilpi.com or create an issue in the repository.
+For support, email support@milyo.com or create an issue in the repository.

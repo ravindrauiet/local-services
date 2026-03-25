@@ -308,7 +308,7 @@ export default function HomePage() {
             {/* Badge */}
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-8">
               <FireIconSolid className="h-5 w-5 mr-2 text-orange-400" />
-              <span className="text-sm font-medium text-white">India&apos;s #1 Mithila Shilpi Platform</span>
+              <span className="text-sm font-medium text-white">India&apos;s #1 Milyo Platform</span>
             </div>
             
             {/* Main Heading */}
@@ -515,7 +515,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Why Choose Mithila Shilpi?
+              Why Choose Milyo?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               We make getting services simple, safe, and reliable
@@ -637,7 +637,7 @@ export default function HomePage() {
                   <strong>Emergency Types:</strong> Electrical faults, Water leaks, AC breakdown, Plumbing emergencies
                 </div>
                 <div className="text-center">
-                  <div className="text-sm font-semibold text-gray-900">Call: 1800-MITHILA</div>
+                  <div className="text-sm font-semibold text-gray-900">Call: 1800-MILYO</div>
                 </div>
               </div>
             </div>
