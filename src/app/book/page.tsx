@@ -181,7 +181,7 @@ function BookServiceContent() {
     return 1;
   });
   const [selectedService, setSelectedService] = useState<{id: string, name: string, price: string, time: string, description: string} | null>(null);
-  const [selectedProvider, setSelectedProvider] = useState<{id: string, name: string, rating: number, price: string, serviceType?: string} | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<{id: string, name: string, rating: number, price: string, serviceType?: string, photo?: string} | null>(null);
   const [loadingProvider, setLoadingProvider] = useState(false);
   const [availableProviders, setAvailableProviders] = useState<Array<{
     id: string;
@@ -575,48 +575,80 @@ function BookServiceContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
+      {/* Hero Section - Elevated Wizard Header */}
+      <section className="relative bg-slate-950 overflow-hidden pt-10 pb-8">
+        {/* Animated Orbs */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-full opacity-30">
-            <div className="w-full h-full" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}></div>
-          </div>
+          <div className="absolute top-[-20%] left-[-10%] w-[40%] h-[60%] rounded-full bg-indigo-600/30 blur-[100px] animate-pulse"></div>
+          <div className="absolute top-[30%] right-[-10%] w-[30%] h-[50%] rounded-full bg-blue-500/20 blur-[100px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[1px]"></div>
+          <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-gray-50 to-transparent"></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center text-white">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Book Your <span className="text-yellow-300">Service</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Get connected with verified service providers in your area. 
-              Simple booking process, transparent pricing, and guaranteed quality.
-            </p>
-            
-            {/* Progress Steps */}
-            <div className="flex justify-center items-center space-x-4 mb-8">
-              <div className={`flex items-center ${currentStep >= 1 ? 'text-yellow-300' : 'text-white/50'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 1 ? 'bg-yellow-300 text-blue-600' : 'bg-white/20'}`}>
-                  1
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center animate-fade-in-up">
+          <div className="inline-flex items-center px-4 py-2 rounded-full glass-panel-dark border border-white/10 mb-6 shadow-xl">
+            <SparklesIcon className="h-4 w-4 mr-2 text-indigo-400" />
+            <span className="text-xs font-bold text-indigo-100 uppercase tracking-widest">Premium Booking Experience</span>
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight drop-shadow-2xl">
+            Reserve Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 text-glow">Expert</span>
+          </h1>
+          
+          <p className="text-lg text-slate-300 max-w-2xl mx-auto font-medium mb-12">
+            Seamlessly connect with vetted professionals. Transparent pricing, guaranteed quality, effortless scheduling.
+          </p>
+          
+          {/* Glassmorphic Progress Steps */}
+          <div className="max-w-3xl mx-auto">
+            <div className="glass-panel-dark rounded-2xl p-4 sm:p-6 border border-white/10 shadow-2xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-blue-500/10 opacity-50"></div>
+              <div className="relative flex justify-between items-center z-10 w-full px-2 sm:px-8">
+                
+                {/* Step 1 */}
+                <div className="flex flex-col items-center group relative w-1/3">
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-bold text-sm sm:text-base border-2 transition-all duration-500 shadow-lg ${
+                    currentStep >= 1 ? 'bg-indigo-500 border-indigo-400 text-white shadow-indigo-500/50' : 'bg-slate-800 border-slate-700 text-slate-400'
+                  }`}>
+                    {currentStep > 1 ? <CheckCircleIcon className="w-6 h-6" /> : '1'}
+                  </div>
+                  <span className={`mt-3 text-xs sm:text-sm font-bold tracking-wide transition-colors duration-500 ${currentStep >= 1 ? 'text-indigo-200' : 'text-slate-500'}`}>Service</span>
                 </div>
-                <span className="ml-2 text-sm font-medium">Choose Service</span>
-              </div>
-              <div className={`w-8 h-0.5 ${currentStep >= 2 ? 'bg-yellow-300' : 'bg-white/20'}`}></div>
-              <div className={`flex items-center ${currentStep >= 2 ? 'text-yellow-300' : 'text-white/50'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 2 ? 'bg-yellow-300 text-blue-600' : 'bg-white/20'}`}>
-                  2
+                
+                {/* Connector 1 */}
+                <div className="flex-1 -mx-4 sm:-mx-8 z-0">
+                  <div className="h-1 bg-slate-800 rounded-full overflow-hidden w-full relative group shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]">
+                    <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 to-blue-500 transition-all duration-700 ease-in-out shadow-[0_0_10px_rgba(99,102,241,0.8)]" style={{ width: currentStep >= 2 ? '100%' : '0%' }}></div>
+                  </div>
                 </div>
-                <span className="ml-2 text-sm font-medium">Select Provider</span>
-              </div>
-              <div className={`w-8 h-0.5 ${currentStep >= 3 ? 'bg-yellow-300' : 'bg-white/20'}`}></div>
-              <div className={`flex items-center ${currentStep >= 3 ? 'text-yellow-300' : 'text-white/50'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 3 ? 'bg-yellow-300 text-blue-600' : 'bg-white/20'}`}>
-                  3
+                
+                {/* Step 2 */}
+                <div className="flex flex-col items-center group relative w-1/3">
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-bold text-sm sm:text-base border-2 transition-all duration-500 shadow-lg ${
+                    currentStep >= 2 ? 'bg-blue-500 border-blue-400 text-white shadow-blue-500/50' : 'bg-slate-800 border-slate-700 text-slate-400'
+                  }`}>
+                    {currentStep > 2 ? <CheckCircleIcon className="w-6 h-6" /> : '2'}
+                  </div>
+                  <span className={`mt-3 text-xs sm:text-sm font-bold tracking-wide transition-colors duration-500 ${currentStep >= 2 ? 'text-blue-200' : 'text-slate-500'}`}>Provider</span>
                 </div>
-                <span className="ml-2 text-sm font-medium">Book Service</span>
+
+                {/* Connector 2 */}
+                <div className="flex-1 -mx-4 sm:-mx-8 z-0">
+                  <div className="h-1 bg-slate-800 rounded-full overflow-hidden w-full relative group shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]">
+                    <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-teal-400 transition-all duration-700 ease-in-out shadow-[0_0_10px_rgba(59,130,246,0.8)]" style={{ width: currentStep >= 3 ? '100%' : '0%' }}></div>
+                  </div>
+                </div>
+                
+                {/* Step 3 */}
+                <div className="flex flex-col items-center group relative w-1/3">
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-bold text-sm sm:text-base border-2 transition-all duration-500 shadow-lg ${
+                    currentStep >= 3 ? 'bg-teal-400 border-teal-300 text-slate-900 shadow-teal-400/50' : 'bg-slate-800 border-slate-700 text-slate-400'
+                  }`}>
+                    3
+                  </div>
+                  <span className={`mt-3 text-xs sm:text-sm font-bold tracking-wide transition-colors duration-500 ${currentStep >= 3 ? 'text-teal-200' : 'text-slate-500'}`}>Confirm</span>
+                </div>
+
               </div>
             </div>
           </div>
@@ -627,13 +659,13 @@ function BookServiceContent() {
 
         {/* Step 1: Service Selection (only if no service pre-selected) */}
         {currentStep === 1 && !selectedService && (
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto animate-fade-in-up">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Choose Your Service
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-4">
+                What do you need help with?
               </h2>
-              <p className="text-lg text-gray-600">
-                Select the service you need and we&apos;ll connect you with the best providers
+              <p className="text-lg text-slate-500 font-medium">
+                Select a category to view top-rated professionals in your area.
               </p>
             </div>
 
@@ -664,22 +696,26 @@ function BookServiceContent() {
                       }
                       setCurrentStep(2);
                     }}
-                    className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 cursor-pointer group border-2 border-transparent hover:border-blue-200"
+                    className="bg-white rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 p-6 cursor-pointer group border border-slate-100 hover:border-indigo-100 relative overflow-hidden"
                   >
-                    <div className={`bg-gradient-to-r ${category.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon className="h-8 w-8 text-white" />
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-slate-50 to-transparent rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-125"></div>
+                    
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-5 bg-gradient-to-br ${category.color} shadow-lg shadow-${category.color.split('-')[1]}-500/20 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 text-white`}>
+                      <Icon className="h-7 w-7" />
                     </div>
                     
-                    <h3 className="text-lg font-bold text-gray-900 mb-2">{category.name}</h3>
-                    <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                    <h3 className="text-xl font-bold text-slate-900 mb-2 tracking-tight group-hover:text-indigo-600 transition-colors">{category.name}</h3>
+                    <p className="text-slate-500 text-sm mb-6 leading-relaxed font-medium line-clamp-2">
                       {category.description}
                     </p>
                     
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-semibold text-blue-600">
-                        Browse Services
+                    <div className="flex items-center justify-between mt-auto">
+                      <div className="text-sm font-bold text-indigo-500 flex items-center">
+                        Select Category
                       </div>
-                      <ArrowRightIcon className="h-5 w-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                      <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-indigo-500 transition-colors duration-300">
+                        <ArrowRightIcon className="h-4 w-4 text-slate-400 group-hover:text-white transition-colors" />
+                      </div>
                     </div>
                   </div>
                 );
@@ -690,38 +726,42 @@ function BookServiceContent() {
 
         {/* Step 2: Provider Selection */}
         {currentStep === 2 && selectedService && (
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-              <div className="flex items-center justify-between mb-6">
+          <div className="max-w-5xl mx-auto animate-fade-in-up">
+            <div className="bg-white rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 p-8 mb-8 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+              
+              <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                    Select a Provider
+                  <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">
+                    Select your Expert
                   </h2>
-                  <p className="text-gray-600">
-                    Choose from our verified {serviceCategories[categoryId as keyof typeof serviceCategories]?.name.toLowerCase() || 'service'} professionals
+                  <p className="text-slate-500 font-medium">
+                    Choose from our elite, verified {serviceCategories[categoryId as keyof typeof serviceCategories]?.name.toLowerCase() || 'service'} professionals
                   </p>
                 </div>
                 <button
                   onClick={() => setCurrentStep(1)}
-                  className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
+                  className="text-slate-500 hover:text-indigo-600 font-semibold flex items-center bg-slate-50 px-4 py-2 rounded-xl transition-all hover:bg-indigo-50"
                 >
-                  <ArrowLeftIcon className="h-4 w-4 mr-1" />
-                  Back
+                  <ArrowLeftIcon className="h-4 w-4 mr-2" />
+                  Go Back
                 </button>
               </div>
 
               {/* Selected Service Summary */}
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8">
+              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 mb-10 border border-indigo-100/50 shadow-inner">
                 <div className="flex items-center">
-                  <div className={`bg-gradient-to-r ${serviceCategories[categoryId as keyof typeof serviceCategories]?.color || 'from-blue-500 to-purple-500'} w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
-                    <div className="h-6 w-6 text-white">📋</div>
+                  <div className={`bg-gradient-to-br ${serviceCategories[categoryId as keyof typeof serviceCategories]?.color || 'from-indigo-500 to-purple-500'} w-14 h-14 rounded-2xl flex items-center justify-center mr-5 shadow-lg`}>
+                    <div className="h-7 w-7 text-white">
+                      <SparklesIcon />
+                    </div>
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900">{selectedService.name}</h3>
-                    <p className="text-sm text-gray-600">{selectedService.description}</p>
-                    <div className="flex items-center mt-2">
-                      <span className="text-sm font-semibold text-blue-600 mr-4">{selectedService.price}</span>
-                      <span className="text-sm text-gray-500">{selectedService.time}</span>
+                    <h3 className="font-bold text-slate-900 text-lg tracking-tight mb-1">{selectedService.name}</h3>
+                    <p className="text-sm text-slate-600 font-medium mb-1">{selectedService.description}</p>
+                    <div className="flex items-center space-x-3 mt-1">
+                      <span className="bg-white px-2.5 py-1 rounded-lg text-xs font-bold text-indigo-600 shadow-sm">{selectedService.price}</span>
+                      <span className="bg-white px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 shadow-sm flex items-center"><ClockIcon className="w-3 h-3 mr-1" />{selectedService.time}</span>
                     </div>
                   </div>
                 </div>
@@ -729,12 +769,15 @@ function BookServiceContent() {
 
               {/* Providers List */}
               {loadingProviders ? (
-                <div className="text-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                  <p className="text-gray-600">Loading providers...</p>
+                <div className="text-center py-20 flex flex-col items-center">
+                  <div className="relative w-16 h-16 animate-spin mb-6">
+                    <div className="absolute inset-0 rounded-full border-t-2 border-indigo-500 border-opacity-50"></div>
+                    <div className="absolute inset-2 rounded-full border-r-2 border-purple-500 border-opacity-75 animate-spin blur-sm"></div>
+                  </div>
+                  <p className="text-slate-500 font-semibold tracking-wide animate-pulse">Finding the perfect experts for you...</p>
                 </div>
               ) : availableProviders.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                   {availableProviders.map((provider) => (
                     <div
                       key={provider.id}
@@ -744,76 +787,88 @@ function BookServiceContent() {
                         rating: provider.rating,
                         price: provider.price || 'Contact for pricing'
                       })}
-                      className="border-2 border-gray-200 rounded-xl p-6 hover:border-blue-300 hover:shadow-lg transition-all duration-300 cursor-pointer group"
+                      className="bg-white border hover:border-transparent border-slate-100 rounded-3xl p-6 transition-all duration-300 cursor-pointer group relative overflow-hidden"
                     >
-                      <div className="flex items-center mb-4">
-                        {provider.photo ? (
-                          <img
-                            src={provider.photo}
-                            alt={provider.name}
-                            className="w-12 h-12 rounded-full object-cover mr-4 border-2 border-gray-200"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                              (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                            }}
-                          />
-                        ) : null}
-                        <div className={`w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-4 ${provider.photo ? 'hidden' : ''}`}>
-                          {provider.photo ? null : (
-                            <span className="text-white font-bold text-lg">
-                              {provider.name?.charAt(0) || '?'}
-                            </span>
-                          )}
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-gray-900">{provider.name}</h3>
-                          <p className="text-sm text-gray-600">{provider.businessName}</p>
-                        </div>
-                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 rounded-3xl m-[-2px]"></div>
+                      <div className="absolute inset-[2px] bg-white rounded-[22px] z-0"></div>
                       
-                      <div className="flex items-center mb-3">
-                        <StarIconSolid className="h-4 w-4 text-yellow-400 mr-1" />
-                        <span className="text-sm font-semibold text-gray-900">{provider.rating.toFixed(1)}</span>
-                        <span className="text-sm text-gray-500 ml-2">({provider.reviews || 0} reviews)</span>
-                      </div>
-                      
-                      {provider.specialties && provider.specialties.length > 0 && (
-                        <div className="mb-3">
-                          <div className="text-xs text-gray-500 mb-1">Specialties:</div>
-                          <div className="flex flex-wrap gap-1">
-                            {provider.specialties.slice(0, 3).map((specialty: string, index: number) => (
-                              <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs">
-                                {specialty}
-                              </span>
-                            ))}
-                            {provider.specialties.length > 3 && (
-                              <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs">
-                                +{provider.specialties.length - 3} more
+                      <div className="relative z-10">
+                        <div className="flex items-center mb-5">
+                          {provider.photo ? (
+                            <img
+                              src={provider.photo}
+                              alt={provider.name}
+                              className="w-14 h-14 rounded-full object-cover mr-4 shadow-md ring-2 ring-indigo-50"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                                (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                              }}
+                            />
+                          ) : null}
+                          <div className={`w-14 h-14 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full flex items-center justify-center mr-4 shadow-md ${provider.photo ? 'hidden' : ''}`}>
+                            {provider.photo ? null : (
+                              <span className="text-white font-black text-xl">
+                                {provider.name?.charAt(0) || '?'}
                               </span>
                             )}
                           </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-slate-900 text-lg group-hover:text-indigo-600 transition-colors">{provider.name}</h3>
+                            <p className="text-xs font-semibold text-slate-500 flex items-center">
+                              <ShieldCheckIcon className="w-3.5 h-3.5 text-emerald-500 mr-1" />
+                              {provider.businessName}
+                            </p>
+                          </div>
+                          
+                          <div className="flex flex-col items-end">
+                            <div className="flex items-center bg-amber-50 px-2 py-1 rounded-lg">
+                              <StarIconSolid className="h-4 w-4 text-amber-500 mr-1" />
+                              <span className="text-sm font-bold text-slate-900">{provider.rating.toFixed(1)}</span>
+                            </div>
+                            <span className="text-[10px] uppercase font-bold text-slate-400 mt-1">({provider.reviews || 0} reviews)</span>
+                          </div>
                         </div>
-                      )}
-                      
-                      <div className="flex items-center justify-between">
-                        <div>
-                          {provider.experience && (
-                            <>
-                              <div className="text-xs text-gray-500">Experience</div>
-                              <div className="text-sm font-semibold text-gray-900">{provider.experience}</div>
-                            </>
-                          )}
-                          {provider.responseTime && (
-                            <>
-                              <div className="text-xs text-gray-500 mt-1">Response Time</div>
-                              <div className="text-sm font-semibold text-gray-900">{provider.responseTime}</div>
-                            </>
-                          )}
+                        
+                        {provider.specialties && provider.specialties.length > 0 && (
+                          <div className="mb-5">
+                            <div className="flex flex-wrap gap-2">
+                              {provider.specialties.slice(0, 3).map((specialty: string, index: number) => (
+                                <span key={index} className="bg-slate-50 border border-slate-100 text-slate-600 px-2.5 py-1 rounded-lg text-xs font-semibold group-hover:bg-white transition-colors">
+                                  {specialty}
+                                </span>
+                              ))}
+                              {provider.specialties.length > 3 && (
+                                <span className="bg-slate-50 border border-slate-100 text-slate-500 px-2.5 py-1 rounded-lg text-xs font-semibold">
+                                  +{provider.specialties.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                        
+                        <div className="flex items-end justify-between pt-4 border-t border-slate-50 group-hover:border-indigo-50 transition-colors">
+                          <div className="flex space-x-6">
+                            {provider.experience && (
+                              <div>
+                                <div className="text-[10px] uppercase font-bold text-slate-400 mb-1">Experience</div>
+                                <div className="text-sm font-bold text-slate-900">{provider.experience}</div>
+                              </div>
+                            )}
+                            {provider.responseTime && (
+                              <div>
+                                <div className="text-[10px] uppercase font-bold text-slate-400 mb-1">Avg Response</div>
+                                <div className="text-sm font-bold text-slate-900">{provider.responseTime}</div>
+                              </div>
+                            )}
+                          </div>
+                          <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-indigo-500 transition-colors">
+                            <ArrowRightIcon className="h-4 w-4 text-slate-400 group-hover:text-white transition-colors" />
+                          </div>
                         </div>
-                        <ArrowRightIcon className="h-5 w-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
                       </div>
                     </div>
                   ))}
+
                 </div>
               ) : (
                 <div className="text-center py-12">
@@ -836,63 +891,80 @@ function BookServiceContent() {
 
         {/* Step 3: Booking Form */}
         {currentStep === 3 && selectedService && selectedProvider && (
-          <div className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <div className="flex items-center justify-between mb-8">
+          <div className="max-w-4xl mx-auto animate-fade-in-up">
+            <div className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-6 sm:p-10 mb-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-teal-50 to-transparent rounded-bl-full -z-10"></div>
+              
+              <div className="flex items-center justify-between mb-10 pb-6 border-b border-slate-100">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                    Complete Your Booking
+                  <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">
+                    Finalize your request
                   </h2>
-                  <p className="text-gray-600">
-                    Fill in your details to book the service
+                  <p className="text-slate-500 font-medium">
+                    Provide your details to confirm your elite booking.
                   </p>
                 </div>
                 <button
                   onClick={() => setCurrentStep(2)}
-                  className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
+                  className="text-slate-500 hover:text-teal-600 font-semibold flex items-center bg-slate-50 px-4 py-2 rounded-xl transition-all hover:bg-teal-50"
                 >
-                  <ArrowLeftIcon className="h-4 w-4 mr-1" />
-                  Back
+                  <ArrowLeftIcon className="h-4 w-4 mr-2" />
+                  Edit Selection
                 </button>
               </div>
 
               {/* Service & Provider Summary */}
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-8">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className={`bg-gradient-to-r ${serviceCategories[categoryId as keyof typeof serviceCategories]?.color || 'from-blue-500 to-purple-500'} w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
-                      <div className="h-6 w-6 text-white">📋</div>
+              <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 sm:p-8 mb-10 shadow-xl relative overflow-hidden">
+                <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-teal-500/20 blur-[50px] rounded-full"></div>
+                
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between relative z-10">
+                  <div className="flex items-center mb-6 sm:mb-0">
+                    <div className="relative">
+                      {selectedProvider.photo ? (
+                        <img src={selectedProvider.photo || ''} alt="Provider" className="w-16 h-16 rounded-2xl object-cover ring-4 ring-white/10" />
+                      ) : (
+                        <div className={`bg-gradient-to-br ${serviceCategories[categoryId as keyof typeof serviceCategories]?.color || 'from-teal-400 to-emerald-500'} w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg ring-4 ring-white/10`}>
+                          <SparklesIcon className="h-8 w-8 text-white" />
+                        </div>
+                      )}
+                      <div className="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-1.5 rounded-lg shadow-lg border-2 border-slate-900">
+                        <CheckCircleIcon className="w-4 h-4" />
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-bold text-gray-900">{selectedService.name}</h3>
-                      <p className="text-sm text-gray-600">with {selectedProvider.name}</p>
-                      <div className="flex items-center mt-1">
-                        <StarIconSolid className="h-4 w-4 text-yellow-400 mr-1" />
-                        <span className="text-sm font-semibold text-gray-900">{selectedProvider.rating}</span>
-                        <span className="text-sm text-gray-500 ml-2">(reviews)</span>
+                    
+                    <div className="ml-5">
+                      <div className="text-teal-400 text-xs font-bold uppercase tracking-widest mb-1">{selectedService.name}</div>
+                      <h3 className="font-bold text-white text-xl mb-1">{selectedProvider.name}</h3>
+                      <div className="flex items-center">
+                        <StarIconSolid className="h-4 w-4 text-amber-400 mr-1" />
+                        <span className="text-sm font-semibold text-slate-200">{selectedProvider.rating}</span>
+                        <span className="text-sm text-slate-400 ml-1.5 font-medium">(Verified Expert)</span>
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm text-gray-600">Estimated Price</div>
-                    <div className="font-bold text-lg text-gray-900">{selectedService.price}</div>
-                    <div className="text-sm text-gray-500">{selectedService.time}</div>
+                  <div className="text-left sm:text-right w-full sm:w-auto bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">Estimated Cost</div>
+                    <div className="font-black text-2xl text-white tracking-tight">{selectedService.price}</div>
+                    <div className="text-sm text-teal-400 font-medium mt-1 flex items-center sm:justify-end">
+                      <ClockIcon className="w-4 h-4 mr-1" /> {selectedService.time}
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-8">
+              <form onSubmit={handleSubmit} className="space-y-10">
                 {/* Customer Information */}
-                <div className="space-y-6">
-                  <h3 className="text-xl font-bold text-gray-900 flex items-center">
-                    <UserIcon className="h-6 w-6 mr-3 text-blue-600" />
-                    Your Information
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 flex items-center mb-6 uppercase tracking-wider">
+                    <span className="bg-indigo-100 text-indigo-600 p-2 rounded-xl mr-3"><UserIcon className="h-5 w-5" /></span>
+                    1. Contact Details
                   </h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="customerName" className="block text-sm font-medium text-gray-700 mb-2">
-                        Full Name *
+                    <div className="group">
+                      <label htmlFor="customerName" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-indigo-600 transition-colors">
+                        Full Name <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -901,14 +973,14 @@ function BookServiceContent() {
                         required
                         value={formData.customerName}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-                        placeholder="Enter your full name"
+                        className="w-full px-5 py-4 bg-slate-50 hover:bg-slate-100 focus:bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-900 font-medium transition-all shadow-sm"
+                        placeholder="John Doe"
                       />
                     </div>
 
-                    <div>
-                      <label htmlFor="customerPhone" className="block text-sm font-medium text-gray-700 mb-2">
-                        Phone Number *
+                    <div className="group">
+                      <label htmlFor="customerPhone" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-indigo-600 transition-colors">
+                        Mobile Number <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="tel"
@@ -917,39 +989,41 @@ function BookServiceContent() {
                         required
                         value={formData.customerPhone}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-                        placeholder="Enter your phone number"
+                        className="w-full px-5 py-4 bg-slate-50 hover:bg-slate-100 focus:bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-900 font-medium transition-all shadow-sm"
+                        placeholder="+91 98765 43210"
+                      />
+                    </div>
+                    
+                    <div className="md:col-span-2 group">
+                      <label htmlFor="customerEmail" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-indigo-600 transition-colors">
+                        Email Address <span className="text-slate-400 font-medium normal-case tracking-normal">(Optional, for receipts)</span>
+                      </label>
+                      <input
+                        type="email"
+                        id="customerEmail"
+                        name="customerEmail"
+                        value={formData.customerEmail}
+                        onChange={handleInputChange}
+                        className="w-full px-5 py-4 bg-slate-50 hover:bg-slate-100 focus:bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-900 font-medium transition-all shadow-sm"
+                        placeholder="john@example.com"
                       />
                     </div>
                   </div>
-
-                  <div>
-                    <label htmlFor="customerEmail" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address (Optional)
-                    </label>
-                    <input
-                      type="email"
-                      id="customerEmail"
-                      name="customerEmail"
-                      value={formData.customerEmail}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-                      placeholder="Enter your email address"
-                    />
-                  </div>
                 </div>
 
+                <hr className="border-slate-100" />
+
                 {/* Service Schedule */}
-                <div className="space-y-6">
-                  <h3 className="text-xl font-bold text-gray-900 flex items-center">
-                    <CalendarIcon className="h-6 w-6 mr-3 text-blue-600" />
-                    Service Schedule
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 flex items-center mb-6 uppercase tracking-wider">
+                    <span className="bg-emerald-100 text-emerald-600 p-2 rounded-xl mr-3"><CalendarIcon className="h-5 w-5" /></span>
+                    2. Service Schedule
                   </h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="serviceDate" className="block text-sm font-medium text-gray-700 mb-2">
-                        Preferred Date *
+                    <div className="group">
+                      <label htmlFor="serviceDate" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-emerald-600 transition-colors">
+                        Select Date <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="date"
@@ -959,13 +1033,13 @@ function BookServiceContent() {
                         min={today}
                         value={formData.serviceDate}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                        className="w-full px-5 py-4 bg-slate-50 hover:bg-slate-100 focus:bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-slate-900 font-medium transition-all shadow-sm"
                       />
                     </div>
 
-                    <div>
-                      <label htmlFor="serviceTime" className="block text-sm font-medium text-gray-700 mb-2">
-                        Preferred Time *
+                    <div className="group">
+                      <label htmlFor="serviceTime" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-emerald-600 transition-colors">
+                        Select Time <span className="text-rose-500">*</span>
                       </label>
                       <select
                         id="serviceTime"
@@ -973,9 +1047,10 @@ function BookServiceContent() {
                         required
                         value={formData.serviceTime}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                        className="w-full px-5 py-4 bg-slate-50 hover:bg-slate-100 focus:bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-slate-900 font-medium transition-all shadow-sm appearance-none"
+                        style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, backgroundPosition: 'right 1rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.5em 1.5em' }}
                       >
-                        <option value="">Select a time</option>
+                        <option value="">Preferred time slot</option>
                         {timeSlots.map((time) => (
                           <option key={time} value={time}>{time}</option>
                         ))}
@@ -984,82 +1059,86 @@ function BookServiceContent() {
                   </div>
                 </div>
 
+                <hr className="border-slate-100" />
+
                 {/* Location Information */}
-                <div className="space-y-6">
-                  <h3 className="text-xl font-bold text-gray-900 flex items-center">
-                    <MapPinIcon className="h-6 w-6 mr-3 text-blue-600" />
-                    Service Location
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 flex items-center mb-6 uppercase tracking-wider">
+                    <span className="bg-rose-100 text-rose-600 p-2 rounded-xl mr-3"><MapPinIcon className="h-5 w-5" /></span>
+                    3. Location Address
                   </h3>
                   
-                  <div>
-                    <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
-                      City/Area *
-                    </label>
-                    <input
-                      type="text"
-                      id="location"
-                      name="location"
-                      required
-                      value={formData.location}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-                      placeholder="Enter your city or area"
-                    />
-                  </div>
+                  <div className="space-y-6">
+                    <div className="group">
+                      <label htmlFor="location" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-rose-600 transition-colors">
+                        City / Area <span className="text-rose-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        required
+                        value={formData.location}
+                        onChange={handleInputChange}
+                        className="w-full px-5 py-4 bg-slate-50 hover:bg-slate-100 focus:bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent text-slate-900 font-medium transition-all shadow-sm"
+                        placeholder="e.g. South Delhi, Andheri West"
+                      />
+                    </div>
 
-                  <div>
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
-                      Complete Address *
-                    </label>
-                    <textarea
-                      id="address"
-                      name="address"
-                      required
-                      rows={3}
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-                      placeholder="Enter your complete address"
-                    />
-                  </div>
-                </div>
-
-                {/* Additional Information */}
-                <div className="space-y-6">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    Additional Information
-                  </h3>
-                  
-                  <div>
-                    <label htmlFor="additionalNotes" className="block text-sm font-medium text-gray-700 mb-2">
-                      Additional Notes (Optional)
-                    </label>
-                    <textarea
-                      id="additionalNotes"
-                      name="additionalNotes"
-                      rows={4}
-                      value={formData.additionalNotes}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-                      placeholder="Any specific requirements or details about the service needed"
-                    />
+                    <div className="group">
+                      <label htmlFor="address" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-rose-600 transition-colors">
+                        Complete Address <span className="text-rose-500">*</span>
+                      </label>
+                      <textarea
+                        id="address"
+                        name="address"
+                        required
+                        rows={3}
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        className="w-full px-5 py-4 bg-slate-50 hover:bg-slate-100 focus:bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent text-slate-900 font-medium transition-all shadow-sm resize-none"
+                        placeholder="House/Flat number, Building name, Street, Landmark"
+                      />
+                    </div>
+                    
+                    <div className="group">
+                      <label htmlFor="additionalNotes" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-rose-600 transition-colors">
+                        Specific Instructions <span className="text-slate-400 font-medium normal-case tracking-normal">(Optional)</span>
+                      </label>
+                      <textarea
+                        id="additionalNotes"
+                        name="additionalNotes"
+                        rows={2}
+                        value={formData.additionalNotes}
+                        onChange={handleInputChange}
+                        className="w-full px-5 py-4 bg-slate-50 hover:bg-slate-100 focus:bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent text-slate-900 font-medium transition-all shadow-sm resize-none"
+                        placeholder="Any context the professional should know before arrival..."
+                      />
+                    </div>
                   </div>
                 </div>
 
                 {/* Submit Button */}
-                <div className="pt-6">
+                <div className="pt-8">
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg text-lg"
+                    className="w-full bg-slate-900 hover:bg-slate-800 text-white py-5 px-6 rounded-2xl font-black focus:outline-none focus:ring-4 focus:ring-slate-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl shadow-slate-900/10 text-xl tracking-wide flex items-center justify-center group"
                   >
-                    {isSubmitting ? 'Submitting...' : 'Confirm Booking'}
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        Confirm Booking
+                        <ArrowRightIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
                   </button>
-                </div>
-
-                <div className="text-center">
-                  <p className="text-sm text-gray-500 leading-relaxed">
-                    We&apos;ll connect you with {selectedProvider.name} and send confirmation within 2 hours.
+                  <p className="text-center text-sm text-slate-500 font-medium mt-4 flex items-center justify-center">
+                    <ShieldCheckIcon className="w-4 h-4 mr-1 text-emerald-500" /> Secure booking. No upfront payment required.
                   </p>
                 </div>
               </form>

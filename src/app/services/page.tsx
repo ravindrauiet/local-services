@@ -302,77 +302,79 @@ export default function ServicesPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section - Premium & Service-Focused */}
-      <section className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 overflow-hidden">
-        {/* Animated Background */}
+      {/* Hero Section - Premium Cinematic */}
+      <section className="relative overflow-hidden bg-slate-950 pt-20">
+        {/* Animated Orbs & Background */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 opacity-40" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}></div>
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
+          <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-indigo-600/30 blur-[120px] mix-blend-screen animate-pulse"></div>
+          <div className="absolute top-[20%] -right-[10%] w-[40%] h-[60%] rounded-full bg-purple-600/20 blur-[120px] mix-blend-screen animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute -bottom-[20%] left-[20%] w-[60%] h-[50%] rounded-full bg-blue-600/20 blur-[120px] mix-blend-screen animate-pulse" style={{ animationDelay: '4s' }}></div>
+          <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px]"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent"></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 text-center">
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-8">
-            <FireIconSolid className="h-5 w-5 mr-2 text-orange-400" />
-            <span className="text-sm font-medium text-white">Professional Services Platform</span>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 text-center animate-fade-in-up">
+          <div className="inline-flex items-center px-5 py-2.5 rounded-full glass-panel-dark border border-white/10 mb-8 shadow-2xl">
+            <SparklesIcon className="h-5 w-5 mr-2 text-indigo-400" />
+            <span className="text-sm font-semibold text-indigo-100 tracking-wide uppercase">Elite Services Platform</span>
           </div>
           
-          <h1 className="text-5xl lg:text-7xl font-bold text-white mb-8 leading-tight">
+          <h1 className="text-5xl lg:text-7xl font-black text-white mb-8 leading-tight tracking-tight drop-shadow-2xl">
             Discover & Book
-              <span className="block bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
-                Professional Services
-              </span>
-            </h1>
+            <span className="block mt-2 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent drop-shadow-lg text-glow">
+              Professional Services
+            </span>
+          </h1>
           
-          <p className="text-xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Browse our comprehensive range of verified local services. From emergency repairs to special events, find the perfect professional for your needs.
+          <p className="text-xl text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
+            Browse our comprehensive range of verified elite services. From emergency repairs to special events, find the perfect professional for your needs.
           </p>
           
           {/* Premium Search Bar */}
-          <div className="max-w-3xl mx-auto mb-12">
-            <div className="bg-white rounded-2xl p-3 shadow-2xl border border-gray-200">
+          <div className="max-w-4xl mx-auto mb-16 relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+            <div className="relative glass-panel rounded-3xl p-3 border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1 relative">
-                  <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <MagnifyingGlassIcon className="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-slate-400" />
                   <input
                     type="text"
                     placeholder="What service do you need?"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
+                    className="w-full pl-14 pr-4 py-4.5 bg-slate-50/50 hover:bg-slate-50 focus:bg-white text-slate-900 placeholder-slate-500 border border-slate-200/50 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-300 text-lg font-medium"
                   />
                 </div>
-                <div className="sm:w-64 relative">
-                  <MapPinIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <div className="sm:w-72 relative">
+                  <MapPinIcon className="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-slate-400" />
                   <input
                     type="text"
-                    placeholder="Enter your location"
+                    placeholder="Enter location"
                     value={userLocation}
                     onChange={(e) => setUserLocation(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
+                    className="w-full pl-14 pr-4 py-4.5 bg-slate-50/50 hover:bg-slate-50 focus:bg-white text-slate-900 placeholder-slate-500 border border-slate-200/50 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-300 text-lg font-medium"
                   />
                 </div>
-                <button className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 rounded-xl font-semibold hover:from-orange-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center">
-                  Search Services <ArrowRightIcon className="h-5 w-5 ml-2" />
+                <button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4.5 rounded-2xl font-bold hover:shadow-[0_0_20px_rgba(99,102,241,0.5)] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center text-lg">
+                  Search <ArrowRightIcon className="h-5 w-5 ml-2" />
                 </button>
               </div>
             </div>
           </div>
           
           {/* Trust Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-8 text-sm">
-            <div className="flex items-center text-blue-100">
-              <ShieldCheckIcon className="h-5 w-5 mr-2 text-green-400" />
-              <span className="font-medium">200+ Verified Professionals</span>
+          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm font-semibold text-slate-300">
+            <div className="flex items-center">
+              <ShieldCheckIcon className="h-5 w-5 mr-2 text-emerald-400 drop-shadow-md" />
+              <span>200+ Verified Professionals</span>
             </div>
-            <div className="flex items-center text-blue-100">
-              <ClockIcon className="h-5 w-5 mr-2 text-blue-400" />
-              <span className="font-medium">Same Day Service Available</span>
+            <div className="flex items-center">
+              <ClockIcon className="h-5 w-5 mr-2 text-indigo-400 drop-shadow-md" />
+              <span>Same Day Service</span>
             </div>
-            <div className="flex items-center text-blue-100">
-              <StarIcon className="h-5 w-5 mr-2 text-yellow-400" />
-              <span className="font-medium">4.8★ Average Rating</span>
+            <div className="flex items-center">
+              <StarIconSolid className="h-5 w-5 mr-2 text-amber-400 drop-shadow-md" />
+              <span>4.8★ Average Rating</span>
             </div>
           </div>
         </div>
@@ -477,95 +479,77 @@ export default function ServicesPage() {
               return (
                 <div
                   key={category.id}
-                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 group cursor-pointer border border-gray-100"
+                  className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-500 p-8 group cursor-pointer border border-slate-100 relative overflow-hidden"
                 >
-                  <div className="flex items-center justify-between mb-6">
-                    <div className={`${category.bgColor} w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon className={`h-8 w-8 ${category.iconColor}`} />
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-slate-100 to-transparent rounded-bl-[100px] -z-10 transition-all duration-500 group-hover:scale-110"></div>
+                  
+                  <div className="flex items-center justify-between mb-8">
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center bg-gradient-to-br ${category.color} shadow-lg shadow-${category.color.split('-')[1]}-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500`}>
+                      <Icon className="h-8 w-8 text-white" />
                     </div>
-                    <div className="flex flex-col items-end">
+                    <div className="flex flex-col items-end gap-2">
                       {category.emergency && (
-                        <div className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium mb-2">
+                        <div className="bg-rose-50 border border-rose-100 text-rose-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
                           <FireIconSolid className="h-3 w-3 inline mr-1" />
-                          24/7 Emergency
+                          Emergency
                         </div>
                       )}
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold shadow-sm ${
                         category.popularity === 'High' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-yellow-100 text-yellow-800'
+                          ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' 
+                          : 'bg-amber-50 text-amber-600 border border-amber-100'
                       }`}>
                         {category.popularity} Demand
                       </span>
                     </div>
                   </div>
                   
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{category.name}</h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
+                  <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight">{category.name}</h3>
+                  <p className="text-slate-500 mb-6 leading-relaxed font-medium">
                     {category.description}
                   </p>
 
                   {/* Service List */}
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold text-gray-900 mb-3">Popular Services:</h4>
+                  <div className="mb-8">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Popular Services</h4>
                     <div className="flex flex-wrap gap-2">
                       {category.services.slice(0, 3).map((service, index) => (
-                        <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs">
+                        <span key={index} className="bg-slate-50 text-slate-600 border border-slate-200 px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-100 transition-colors">
                           {service}
                         </span>
                       ))}
                       {category.services.length > 3 && (
-                        <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs">
-                          +{category.services.length - 3} more
+                        <span className="bg-slate-50 text-slate-500 border border-slate-200 px-2.5 py-1.5 rounded-lg text-xs font-semibold">
+                          +{category.services.length - 3}
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Features */}
-                  <div className="mb-6">
-                    <div className="space-y-2">
+                  {/* Quality Marks */}
+                  <div className="mb-8 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div className="space-y-3">
                       {category.features.slice(0, 2).map((feature, index) => (
-                        <div key={index} className="flex items-center text-sm text-gray-600">
-                          <CheckCircleIconSolidFill className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                        <div key={index} className="flex items-center text-sm font-semibold text-slate-700">
+                          <CheckCircleIconSolidFill className="h-5 w-5 text-emerald-500 mr-3 flex-shrink-0" />
                           <span>{feature}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Stats */}
-                  <div className="grid grid-cols-4 gap-4 mb-6">
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-gray-900">{category.providers}</div>
-                      <div className="text-xs text-gray-600">Providers</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-gray-900">{category.rating}★</div>
-                      <div className="text-xs text-gray-600">Rating</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-gray-900">{category.reviews}</div>
-                      <div className="text-xs text-gray-600">Reviews</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-gray-900">{category.warranty}</div>
-                      <div className="text-xs text-gray-600">Warranty</div>
-                    </div>
-                  </div>
-
                   {/* Price & CTA */}
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mt-auto">
                     <div>
-                      <div className="text-sm text-gray-600">Starting from</div>
-                      <div className="font-bold text-lg text-gray-900">{category.avgPrice}</div>
+                      <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Starting from</div>
+                      <div className="font-black text-2xl text-slate-900">{category.avgPrice}</div>
                     </div>
                     <Link
                       href={`/services/${category.id}`}
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg flex items-center"
+                      className="bg-slate-900 text-white px-6 py-3.5 rounded-xl font-bold hover:bg-indigo-600 transition-all duration-300 shadow-xl shadow-slate-900/10 flex items-center group/btn"
                     >
-                      Browse
-                      <ArrowRightIcon className="h-4 w-4 ml-2" />
+                      Book Now
+                      <ArrowRightIcon className="h-4 w-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                     </Link>
                   </div>
                 </div>
