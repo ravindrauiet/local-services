@@ -46,6 +46,8 @@ const Navigation = () => {
     { name: 'Services', href: '/services' },
     { name: 'Providers', href: '/providers' },
     { name: 'Book Service', href: '/book' },
+    { name: 'About', href: '/about' },
+    { name: 'Contact', href: '/contact' },
   ];
 
   const isActive = (href: string) => pathname === href;
@@ -53,30 +55,29 @@ const Navigation = () => {
   return (
     <nav className="bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20">
+        <div className="flex justify-between h-20 items-center">
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center group">
-              <div className="w-10 h-10 rounded-xl overflow-hidden mr-3 group-hover:scale-105 transition-transform duration-300 shadow-lg">
+              <div className="group-hover:scale-105 transition-transform duration-300">
                 <Image
                   src="/logo.png"
                   alt="Milyo Logo"
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-contain"
+                  width={180}
+                  height={48}
+                  className="h-12 w-auto object-contain"
                 />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Milyo</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-2">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                className={`px-3 py-2 rounded-lg font-medium transition-all duration-300 ${
                   isActive(item.href)
                     ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
                     : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'

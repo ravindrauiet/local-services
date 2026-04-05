@@ -25,16 +25,13 @@ export default function Footer() {
           {/* Company Info */}
           <div className="lg:col-span-1">
             <div className="flex items-center mb-6">
-              <div className="w-10 h-10 rounded-xl overflow-hidden mr-3">
-                <Image
-                  src="/logo.png"
-                  alt="Milyo Logo"
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <h3 className="text-2xl font-bold">Milyo</h3>
+              <Image
+                src="/logo.png"
+                alt="Milyo Logo"
+                width={180}
+                height={48}
+                className="h-12 w-auto object-contain"
+              />
             </div>
             <p className="text-gray-300 mb-6 leading-relaxed">
               Connecting you with the best craftsmen and service providers. Quality services, 
@@ -197,7 +194,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-400 text-sm mb-4 md:mb-0">
-              © {currentYear} LocalServices. All rights reserved.
+              © {currentYear} Milyo. All rights reserved.
             </div>
             
             <div className="flex flex-wrap justify-center md:justify-end space-x-6 text-sm">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import FloatingButtons from "@/components/FloatingButtons";
 import { UserAuthProvider } from "@/contexts/UserAuthContext";
 
 const geistSans = Geist({
@@ -34,13 +35,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <UserAuthProvider>
           <Navigation />
           {children}
+          <FloatingButtons />
         </UserAuthProvider>
       </body>
     </html>
